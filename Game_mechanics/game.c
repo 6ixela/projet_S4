@@ -43,7 +43,7 @@ struct piece **newBoard()
     }
 
     //list to place pieces
-    char** piecesNames = {"rook", "knight", "bishop", "queen", "king",
+    char piecesNames[][10] = {"rook", "knight", "bishop", "queen", "king",
     "bishop", "knight", "rook"};
 
     for(int x = 0; x<8; x++)
@@ -81,7 +81,7 @@ int placePiece(struct piece **board, char* name, int pos)
     }
     else
     {
-        board[pos] = new_piece(name);
+        board[pos] = newPiece(name);
     }
     return res;
 }
