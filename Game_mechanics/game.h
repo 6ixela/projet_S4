@@ -17,6 +17,9 @@ struct piece *newPiece (char* name);
 //returns the board(a list of pointers of pieces)
 struct piece **newBoard();
 
+//Free the board
+void freeBoard(struct piece **board);
+
 //Places a piece at a given place
 //board: the board to place; name: the piece name; pos: the position to place
 //returns 0 if worked, -1 if position problem, 1 if there is already a piece

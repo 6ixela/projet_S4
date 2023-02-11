@@ -46,18 +46,27 @@ char recupPiece(struct piece *p)
 
 char *cara(char *c1)
 {
-    char*c2 = malloc(6);
-    memcpy(c2, c1, 6);
+    printf("---------------------\n");
+    int len = strlen(c1) + 1;
+    char *c2 = malloc(len);
+    printf("---------------------\n");
+
+    memcpy(c2, c1, len);
+    printf("---------------------\n");
+    printf("---------------------\n");
     return c2;
 }
 
+
+
 int main()
 {
-    /*struct piece *p = newPiece("king");
+    struct piece *p = newPiece("king");
     char c = recupPiece(p);
     printf("%c\n", c);
     free(p->name);
-    free(p);*/
+    free(p);
     struct piece **board = newBoard();
     print_chess(board);
+    freeBoard(board);
 }

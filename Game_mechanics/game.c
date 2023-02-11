@@ -7,7 +7,7 @@
 struct piece *newPiece(char *name)
 {
     struct piece *res =  malloc(sizeof(struct piece));
-    size_t len = strlen(name);
+    size_t len = strlen(name) + 1;
     if(strncmp(name, "pawn", len) == 0)
         res->value = 100;
     else if (strncmp(name, "knight", len) == 0)
@@ -28,7 +28,7 @@ struct piece *newPiece(char *name)
         res->hasMoved = 0;
         res->isWhite = 0;
         res->name = malloc(len);
-        memcpy(res->name, name, len+1);
+        memcpy(res->name, name, len);
     }
     return res;
 }
@@ -64,6 +64,22 @@ struct piece **newBoard()
     }
 
     return board;
+}
+
+void freeBoard(struct piece **board)
+{
+    for (size_t i = 0; i < 8; i++)
+    {
+        for (size_t j = 0; j < 8; j++)
+        {
+            struct piece *p = board[i * 8 + j];
+            if (p != NULL)
+            {
+                free(p->name);
+                free(p);
+            }   
+        }   
+    }  
 }
 
 int placePiece(struct piece **board, char* name, int pos)
