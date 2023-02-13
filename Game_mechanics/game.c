@@ -33,6 +33,13 @@ struct piece *newPiece(char *name)
     return res;
 }
 
+void freePiece(struct piece *p)
+{
+    free(p->name);
+    free(p->possibleMoves);
+    free(p);
+}
+
 struct piece **newBoard()
 {
     //malloc board size: 64 pointers
@@ -75,8 +82,7 @@ void freeBoard(struct piece **board)
             struct piece *p = board[i * 8 + j];
             if (p != NULL)
             {
-                free(p->name);
-                free(p);
+                freePiece(p);
             }   
         }   
     }  
@@ -98,6 +104,7 @@ int placePiece(struct piece **board, char* name, int pos)
     else
     {
         board[pos] = newPiece(name);
+        board[pos]->pos = pos;
     }
     return res;
 }
@@ -118,7 +125,8 @@ void movePiece(struct piece **board, int pos, int dest)
         {
             if(board[dest] != NULL)
             {
-                //MANGER
+                //eats the piece on the position
+                freePiece(board[dest]);
             }
             board[dest] = piece;
             board[pos] = NULL;

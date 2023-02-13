@@ -7,13 +7,17 @@ struct piece
     int isWhite;
     int hasMoved;
     int value;
+    int pos;
     int nbMoves;
-    int *possiblePositions;
+    int *possibleMoves;
 };
 
 //initializes a new piece with the given name
 //returns null if wrong name
 struct piece *newPiece (char* name);
+
+//free the piece p
+void freePiece(struct piece *p);
 
 //Creates a new board and places every base piece on it
 //returns the board(a list of pointers of pieces)
