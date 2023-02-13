@@ -7,6 +7,8 @@ struct piece
     int isWhite;
     int hasMoved;
     int value;
+    int nbMoves;
+    int *possiblePositions;
 };
 
 //initializes a new piece with the given name
@@ -24,5 +26,9 @@ void freeBoard(struct piece **board);
 //board: the board to place; name: the piece name; pos: the position to place
 //returns 0 if worked, -1 if position problem, 1 if there is already a piece
 int placePiece(struct piece **board, char* name, int pos);
+
+//Moves a piece from pos to dest
+//if no piece in pos or dest not in the pieces possible Moves, does nothing
+void movePiece(struct piece **board, int pos, int dest);
 
 #endif

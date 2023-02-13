@@ -101,3 +101,27 @@ int placePiece(struct piece **board, char* name, int pos)
     }
     return res;
 }
+
+void movePiece(struct piece **board, int pos, int dest)
+{
+    struct piece *piece = board[pos];
+    if(piece != NULL)
+    {
+        int isPossible = 0;
+        int i =0;
+        while(i<piece->nbMoves && !isPossible)
+        {
+            isPossible = piece->possibleMoves[i] == dest;
+            i++;
+        }
+        if(isPossible)
+        {
+            if(board[dest] != NULL)
+            {
+                //MANGER
+            }
+            board[dest] = piece;
+            board[pos] = NULL;
+        }
+    }
+}
