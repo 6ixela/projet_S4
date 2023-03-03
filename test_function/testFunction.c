@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
+#include "../Game_mechanics/movePiece.h"
+
 
 
 void print_chess(struct piece **tab)
@@ -14,7 +17,17 @@ void print_chess(struct piece **tab)
         for (size_t j = 0; j < 8; j++)
         {
             char piece = recupPiece(tab[i * 8 + j]);
-            printf("%c|", piece);
+            if (tab[i * 8 + j] != NULL && !tab[i * 8 + j]->isWhite)
+            {
+                printf("\033[0;34m");
+                printf("%c", piece);
+                printf("\033[0m");
+                printf("|");
+            }
+            else
+                printf("%c|", piece);
+            
+            
         }
         printf("\n");
     }
@@ -68,5 +81,18 @@ int main()
     free(p);
     struct piece **board = newBoard();
     print_chess(board);
+
+    
+
+
+    int moved = MovePown(board, board[11], 19);
+    printf("moved1 = %i\n", moved);
+    moved = MovePown(board, board[12], 28);
+    printf("moved2 = %i\n", moved);
+
+    moved = MovePown(board, board[19], 28);
+
+    print_chess(board);
+
     freeBoard(board);
 }

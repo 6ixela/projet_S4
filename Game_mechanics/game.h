@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-struct piece 
+struct piece
 {
     char *name;
     int isWhite;

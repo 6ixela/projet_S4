@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game.h"
+#include "movePiece.h"
 
 
 struct piece *newPiece(char *name)
@@ -130,6 +131,8 @@ void movePiece(struct piece **board, int pos, int dest)
             }
             board[dest] = piece;
             board[pos] = NULL;
+            piece->hasMoved = 1;
+            piece->pos = dest;
         }
     }
 }
