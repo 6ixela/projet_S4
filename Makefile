@@ -2,7 +2,7 @@ commit:
 	git add -A && git commit -s -m "send test" && git push
 
 testMemory:
-	gcc -Wextra -Wall -fsanitize=address test_function/testFunction.c Game_mechanics/game.c
+	gcc -Wextra -Wall -fsanitize=address test_function/testFunction.c Game_mechanics/game.c Game_mechanics/movePiece.c
 
 test:
 	gcc -Wextra -Wall test_function/testFunction.c Game_mechanics/game.c Game_mechanics/movePiece.c

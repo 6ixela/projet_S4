@@ -29,6 +29,7 @@ struct piece *newPiece(char *name)
         res->hasMoved = 0;
         res->isWhite = 0;
         res->name = malloc(len);
+        res->possibleMoves = malloc(0);
         memcpy(res->name, name, len);
     }
     return res;
@@ -37,7 +38,9 @@ struct piece *newPiece(char *name)
 void freePiece(struct piece *p)
 {
     free(p->name);
+
     free(p->possibleMoves);
+    
     free(p);
 }
 
@@ -86,7 +89,8 @@ void freeBoard(struct piece **board)
                 freePiece(p);
             }   
         }   
-    }  
+    }
+    free(board);
 }
 
 int placePiece(struct piece **board, char* name, int pos)

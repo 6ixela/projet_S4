@@ -36,38 +36,13 @@ size_t LenPossibleMovePown(struct piece **board, struct piece *p)
     if (!p->hasMoved)
         if(board[p->pos+2*isWhite] == NULL)
             res++;
-    /*
-    
-    if (!p->isWhite)
-    {
-        if (board[p->pos-8] == NULL)
-            res++;
-        if((p->pos-7)/8 == p->pos/8-1 && board[p->pos-7] != NULL)
-            res++;
-        if((p->pos-9)/8 == p->pos/8-1 && board[p->pos-9] != NULL)
-            res++;
-        if (!p->hasMoved)
-            if(board[p->pos-16] == NULL)
-                res++;
-    }
-    else
-    {
-        if (board[p->pos+8] == NULL)
-            res++;
-        if((p->pos+7)/8 == p->pos/8+1 && board[p->pos+7] != NULL)
-            res++;
-        if((p->pos+9)/8 == p->pos/8+1 && board[p->pos+9] != NULL)
-            res++;
-        if (!p->hasMoved)
-            if(board[p->pos+16] == NULL)
-                res++;
-    }*/
     
     return res;
 }
 size_t CreatePossibleMovePown(struct piece **board, struct piece *p)
 {
     size_t lenMalloc = LenPossibleMovePown(board, p);
+    free(p->possibleMoves);
     p->possibleMoves = malloc(sizeof(int) * lenMalloc);
     size_t cpt = 0;
     int isWhite = p->isWhite ? 8 : -8;
@@ -119,10 +94,10 @@ int MovePown(struct piece **board, struct piece *p, int dst)
     return res;
     
 }
-/*size_t possibleMoveTower(struct piece **board, struct piece *p)
+size_t LenPossibleMoveTower(struct piece **board, struct piece *p)
 {
     size_t numberPossibleMove = 0;
-    int i = piece->pos;
+    int i = p->pos;
     int fini = 0;
     while(i>0 && !fini)
     {
@@ -134,7 +109,7 @@ int MovePown(struct piece **board, struct piece *p, int dst)
                 numberPossibleMove++;
             fini = 69;
         }
-        i++;
+        i-=8;
     }
     fini = 0;
     while(i<64 && !fini)
@@ -147,10 +122,10 @@ int MovePown(struct piece **board, struct piece *p, int dst)
                 numberPossibleMove++;
             fini = 69;
         }
-        i++;
+        i+=8;
     }
     fini = 0;
-    while(i>0 && !fini)
+    while(i/8==p->pos/8 && !fini)
     {
         if(board[i] == NULL)
             numberPossibleMove++;
@@ -162,7 +137,7 @@ int MovePown(struct piece **board, struct piece *p, int dst)
         }
         i++;
     }
-    while(i>0 && !fini)
+    while(i/8==p->pos/8 && !fini)
     {
         if(board[i] == NULL)
             numberPossibleMove++;
@@ -172,7 +147,92 @@ int MovePown(struct piece **board, struct piece *p, int dst)
                 numberPossibleMove++;
             fini = 69;
         }
-        i++;
+        i--;
     }
+}
 
-}*/
+void CreatePossibleMoveTower(struct piece **board, struct piece *p)
+{
+    p->nbMoves = LenPossibleMoveTower(board, p);
+    free(p->possibleMoves);
+    p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+    size_t cpt = 0;
+    int i = p->pos;
+    int fini = 0;
+    while(i>0 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i-=8;
+    }
+    fini = 0;
+    while(i<64 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i+=8;
+    }
+    fini = 0;
+    while(i/8==p->pos/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i++;
+    }
+    while(i/8==p->pos/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i--;
+    }
+}
+
+//void MoveTower()
