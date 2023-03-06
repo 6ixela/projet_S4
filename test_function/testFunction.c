@@ -79,13 +79,14 @@ int main()
     
 
 
-    int moved = Move(board, board[8], 24);
-    printf("moved1 = %i\n", moved);
-    moved = Move(board, board[0], 16);
-    Move(board, board[16], 22);
-    Move(board, board[12], 28);
-    Move(board, board[4], 12);
-    printf("moved2 = %i\n", moved);
+    //Move(board, board[6], 38);
+    Move(board, board[6], 21);
+    /*printf("moved1 = %i\n", moved);
+    //moved = Move(board, board[6], 21);
+    //Move(board, board[16], 22);
+    //Move(board, board[12], 28);
+    //Move(board, board[4], 12);
+    printf("moved2 = %i\n", moved);*/
 
     //moved = MovePown(board, board[19], 28);
 

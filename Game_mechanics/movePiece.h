@@ -14,7 +14,10 @@ int Move(struct piece **board, struct piece *p, int dst);
 
 size_t LenPossibleMoveKing(struct piece **board, struct piece *p);
 void CreatePossibleMoveKing(struct piece **board, struct piece *p);
-int MoveKing(struct piece **board, struct piece *p, int dst);
 
+size_t LenPossibleMoveKnight(struct piece **board, struct piece *p);
+void CreatePossibleMoveKnight(struct piece **board, struct piece *p);
+
+void printMove(struct piece *p);
 
 #endif

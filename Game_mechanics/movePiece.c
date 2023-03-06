@@ -237,7 +237,7 @@ void MovePiece(struct piece **board, struct piece *p, int dst)
       
     if(board[dst] != NULL)
         //eats the piece on the position
-    freePiece(board[dst]);
+        freePiece(board[dst]);
     board[dst] = p;
     board[p->pos] = NULL;
     p->hasMoved = 1;
@@ -249,6 +249,7 @@ void MovePiece(struct piece **board, struct piece *p, int dst)
 size_t LenPossibleMoveKing(struct piece **board, struct piece *p)
 {
     size_t res = 0;
+
     if(p->pos + 8 < 64 && (board[p->pos + 8] == NULL ||
     board[p->pos + 8]->isWhite != p->isWhite))
         res++;
@@ -261,10 +262,10 @@ size_t LenPossibleMoveKing(struct piece **board, struct piece *p)
     if(p->pos + 7 < 64 && (board[p->pos + 7] == NULL ||
     board[p->pos + 7]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 7 < 64 && (board[p->pos - 7] == NULL ||
+    if(p->pos - 7 > 0 && (board[p->pos - 7] == NULL ||
     board[p->pos - 7]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 9 < 64 && (board[p->pos - 9] == NULL ||
+    if(p->pos - 9 > 0 && (board[p->pos - 9] == NULL ||
     board[p->pos - 9]->isWhite != p->isWhite))
         res++;
     if((p->pos + 1)/8 == p->pos&& (board[p->pos + 1] == NULL ||
@@ -278,7 +279,7 @@ size_t LenPossibleMoveKing(struct piece **board, struct piece *p)
 
 void CreatePossibleMoveKing(struct piece **board, struct piece *p)
 {
-    p->nbMoves = LenPossibleMoveTower(board, p);
+    p->nbMoves = LenPossibleMoveKing(board, p);
     free(p->possibleMoves);
     p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
     size_t cpt = 0;
@@ -339,7 +340,7 @@ int Move(struct piece **board, struct piece *p, int dst)
             CreatePossibleMovePawn(board, p);
 
         else if (strncmp(p->name, "knight", len) == 0)
-            CreatePossibleMoveKing(board, p);
+            CreatePossibleMoveKnight(board, p);
         else if (strncmp(p->name, "bishop", len) == 0)
             CreatePossibleMoveKing(board, p);
 
@@ -353,14 +354,106 @@ int Move(struct piece **board, struct piece *p, int dst)
             CreatePossibleMoveKing(board, p);
         
         size_t i = 0; 
+        printMove(p);
+
         while((int)i < p->nbMoves && !res)
         {
             if(p->possibleMoves[i] == dst)
                 res = 1;
             i++;
         }
-        if(board[dst] == NULL || board[dst]->isWhite != p->isWhite)
+        if(res && (board[dst] == NULL || board[dst]->isWhite != p->isWhite))
             MovePiece(board, p, dst);
     }
     return res;
+}
+
+void CreatePossibleMoveKnight(struct piece **board, struct piece *p)
+{
+    p->nbMoves = LenPossibleMoveKnight(board, p);
+    free(p->possibleMoves);
+    p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+    size_t cpt = 0;
+    if(p->pos-17 > 0 && (p->pos-17)/8+2 == p->pos/8 &&
+    (board[p->pos -17] == NULL || board[p->pos - 17]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos -17;
+        cpt++;
+    }
+    if(p->pos-15 > 0 && (p->pos-15)/8+2 == p->pos/8 &&
+    (board[p->pos-15] == NULL || board[p->pos-15]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos -15;
+        cpt++;
+    }
+    if(p->pos-10 > 0 && (p->pos-10)/8+1 == p->pos/8 &&
+    (board[p->pos-10] == NULL || board[p->pos-10]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos -10;
+        cpt++;
+    }
+    if(p->pos-6 > 0 && (p->pos-6)/8+1 == p->pos/8 &&
+    (board[p->pos-6] == NULL || board[p->pos-6]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos -6;
+        cpt++;
+    }
+    if(p->pos+17 < 64 && (p->pos+17)/8-2 == p->pos/8 &&
+    (board[p->pos+17] == NULL || board[p->pos+17]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos + 17;
+        cpt++;
+    }
+    if(p->pos+15 < 64 && (p->pos+15)/8-2 == p->pos/8 &&
+    (board[p->pos+15] == NULL || board[p->pos+15]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos + 15;
+        cpt++;
+    }
+    if(p->pos+10 < 64 && (p->pos+10)/8-1 == p->pos/8 &&
+    (board[p->pos+10] == NULL || board[p->pos+10]->isWhite != p->isWhite))
+    {
+        p->possibleMoves[cpt] = p->pos + 10;
+        cpt++;
+    }
+    if(p->pos+ 6 < 64 && (p->pos+6)/8-1 == p->pos/8 &&
+    (board[p->pos+6] == NULL || board[p->pos+6]->isWhite != p->isWhite))
+        p->possibleMoves[cpt] = p->pos + 6;
+}
+size_t LenPossibleMoveKnight(struct piece **board, struct piece *p)
+{
+    size_t res = 0;
+    if(p->pos-17 > 0 && (p->pos-17)/8+2 == p->pos/8 &&
+    (board[p->pos -17] == NULL || board[p->pos - 17]->isWhite != p->isWhite))
+        res++;
+    if(p->pos-15 > 0 && (p->pos-15)/8+2 == p->pos/8 &&
+    (board[p->pos-15] == NULL || board[p->pos-15]->isWhite != p->isWhite))
+        res++;
+    if(p->pos-10 > 0 && (p->pos-10)/8+1 == p->pos/8 &&
+    (board[p->pos-10] == NULL || board[p->pos-10]->isWhite != p->isWhite))
+        res++;
+    if(p->pos-6 > 0 && (p->pos-6)/8+1 == p->pos/8 &&
+    (board[p->pos-6] == NULL || board[p->pos-6]->isWhite != p->isWhite))
+        res++;
+    if(p->pos+17 < 64 && (p->pos+17)/8-2 == p->pos/8 &&
+    (board[p->pos+17] == NULL ||board[p->pos+17]->isWhite != p->isWhite))
+        res++;
+    if(p->pos+15 < 64 && (p->pos+15)/8-2 == p->pos/8 &&
+    (board[p->pos+15] == NULL || board[p->pos+15]->isWhite != p->isWhite))
+        res++;
+    if(p->pos+10 < 64 && (p->pos+10)/8-1 == p->pos/8 &&
+    (board[p->pos+10] == NULL || board[p->pos+10]->isWhite != p->isWhite))
+        res++;
+    if(p->pos+ 6 < 64 && (p->pos+6)/8-1 == p->pos/8 &&
+    (board[p->pos+6] == NULL || board[p->pos+6]->isWhite != p->isWhite))
+        res++;
+    return res;
+}
+
+void printMove(struct piece *p)
+{
+    for (size_t i = 0; i < (size_t)p->nbMoves; i++)
+    {
+        printf("move %li = %i\n", i, p->possibleMoves[i]);
+    }
 }
