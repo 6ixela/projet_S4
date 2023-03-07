@@ -36,13 +36,12 @@ size_t LenPossibleMovePawn(struct piece **board, struct piece *p)
     }
     if (!p->hasMoved)
         if(board[p->pos+2*isWhite] == NULL)
-            res++;
-    
+            res++;    
     return res;
 }
 void CreatePossibleMovePawn(struct piece **board, struct piece *p)
 {
-    p->nbMoves = LenPossibleMoveTower(board, p);
+    p->nbMoves = LenPossibleMovePawn(board, p);
     free(p->possibleMoves);
     p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
     size_t cpt = 0;
@@ -140,9 +139,14 @@ size_t LenPossibleMoveTower(struct piece **board, struct piece *p)
 
 void CreatePossibleMoveTower(struct piece **board, struct piece *p)
 {
-    p->nbMoves = LenPossibleMoveTower(board, p);
-    free(p->possibleMoves);
-    p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+    if (strncmp(p->name, "rook", strlen(p->name)) == 0)
+    {
+        p->nbMoves = LenPossibleMoveTower(board, p);
+        free(p->possibleMoves);
+        p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+    }
+    
+    
     size_t cpt = 0;
     int i = p->pos-8;
     int fini = 0;
@@ -342,19 +346,18 @@ int Move(struct piece **board, struct piece *p, int dst)
         else if (strncmp(p->name, "knight", len) == 0)
             CreatePossibleMoveKnight(board, p);
         else if (strncmp(p->name, "bishop", len) == 0)
-            CreatePossibleMoveKing(board, p);
+            CreatePossibleMoveBishop(board, p, 0);
 
         else if (strncmp(p->name, "rook", len) == 0)
             CreatePossibleMoveTower(board, p);
 
         else if (strncmp(p->name, "queen", len) == 0)
-            CreatePossibleMoveKing(board, p);
+            CreatePossibleMoveQueen(board, p);
     
         else if(strncmp(p->name, "king", len) == 0)
             CreatePossibleMoveKing(board, p);
         
-        size_t i = 0; 
-        printMove(p);
+        size_t i = 0;
 
         while((int)i < p->nbMoves && !res)
         {
@@ -450,10 +453,178 @@ size_t LenPossibleMoveKnight(struct piece **board, struct piece *p)
     return res;
 }
 
+
+size_t LenPossibleMoveBishop(struct piece **board, struct piece *p)
+{
+    size_t res = 0;
+    int i = p->pos - 9;
+    int fini = 0;
+
+    while(i>=0&&i/8+1==(i+9)/8 && !fini)
+    {
+        if(board[i] == NULL)
+            res++;
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+                res++;
+            fini = 69;
+        }
+        i-=9;
+    }
+    i = p->pos - 7;
+    fini = 0;
+    while(i>=0&&i/8+1==(i+7)/8 && !fini)
+    {
+        if(board[i] == NULL)
+            res++;
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+                res++;
+            fini = 69;
+        }
+        i-=7;
+    }
+    i = p->pos + 7;
+    fini = 0;
+    while(i/8-1==(i-7)/8 && !fini)
+    {
+        if(board[i] == NULL)
+            res++;
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+                res++;
+            fini = 69;
+        }
+        i+=7;
+    }
+    i = p->pos + 9;
+    fini = 0;
+    while(i/8-1==(i-9)/8 && !fini)
+    {
+        if(board[i] == NULL)
+            res++;
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+                res++;
+            fini = 69;
+        }
+        i+=9;
+    }
+    
+    
+    return res;
+}
+void CreatePossibleMoveBishop(struct piece **board, struct piece *p, size_t cpt)
+{
+    int i = p->pos - 9;
+    int fini = 0;
+    if (cpt == 0)
+    {
+        free(p->possibleMoves);
+        p->nbMoves = LenPossibleMoveBishop(board, p);
+        p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+    }
+        
+    
+    while(i>=0&&i/8+1==(i+9)/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i-=9;
+    }
+    i = p->pos - 7;
+    fini = 0;
+    while(i>=0&&i/8+1== (i+7)/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i-=7;
+    }
+    i = p->pos + 7;
+    fini = 0;
+    while(i/8-1==(i-7)/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i+=7;
+    }
+    i = p->pos + 9;
+    fini = 0;
+    while(i/8-1==(i-9)/8 && !fini)
+    {
+        if(board[i] == NULL)
+        {
+            p->possibleMoves[cpt] = i;
+            cpt++;
+        }
+        else
+        {
+            if (board[i]->isWhite != p->isWhite)
+            {
+                p->possibleMoves[cpt] = i;
+                cpt++;
+            }
+            fini = 69;
+        }
+        i+=9;
+    }
+}
 void printMove(struct piece *p)
 {
-    for (size_t i = 0; i < (size_t)p->nbMoves; i++)
+    for (size_t i = 0; (int)i < p->nbMoves; i++)
     {
         printf("move %li = %i\n", i, p->possibleMoves[i]);
     }
+}
+
+void CreatePossibleMoveQueen(struct piece **board, struct piece *p)
+{
+    size_t i1 = LenPossibleMoveBishop(board, p);
+    size_t i2 = LenPossibleMoveTower(board, p);
+    free(p->possibleMoves);
+    p->nbMoves = i1 + i2;
+    p->possibleMoves = malloc(sizeof(int) * p->nbMoves);
+
+    CreatePossibleMoveTower(board, p);
+    CreatePossibleMoveBishop(board, p, i2);
 }

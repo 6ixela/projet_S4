@@ -80,7 +80,16 @@ int main()
 
 
     //Move(board, board[6], 38);
-    Move(board, board[6], 21);
+    Move(board, board[12], 28);
+    Move(board, board[52], 36);
+    Move(board, board[5], 33);
+    Move(board, board[3], 39);
+    Move(board, board[39], 53);
+    Move(board, board[53], 62);
+
+
+
+
     /*printf("moved1 = %i\n", moved);
     //moved = Move(board, board[6], 21);
     //Move(board, board[16], 22);
