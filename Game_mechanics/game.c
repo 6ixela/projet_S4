@@ -114,9 +114,10 @@ int placePiece(struct piece **board, char* name, int pos)
     return res;
 }
 
-void movePiece(struct piece **board, int pos, int dest)
+int movePiece(struct piece **board, int pos, int dest)
 {
     struct piece *piece = board[pos];
+    int res = 0;
     if(piece != NULL)
     {
         int isPossible = 0;
@@ -138,5 +139,40 @@ void movePiece(struct piece **board, int pos, int dest)
             piece->hasMoved = 1;
             piece->pos = dest;
         }
+        res = isPossible;
     }
+    return res;
+}
+
+void turn(struct piece **board, int isWhiteTurn)
+{
+    
+    while(1)
+    {
+        printf("Enter piece position then destinaton:\n");
+        char* piecePos = calloc(3, 1);
+        char* dest = calloc(3, 1);
+        fgets(piecePos, 3, stdin);
+        fgets(dest, 3, stdin);
+
+        if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
+            piecePos[1] < '1' || piecePos[1] > '8' )
+        {
+            printf("incorrect character. ");
+            continue;
+        }
+        int p1 = (piecePos[0] - 'a')*8 + piecePos[0] - '1';
+        int p2 = (piecePos[1] - 'a')*8 + piecePos[1] - '1';
+
+        if(movePiece(board, p1,p2))
+            break;
+        printf("Position not accessible. ");
+    }
+    //TODO: CALCUTALE ALL POS FOR OTHER PLAYER
+    //int nextMoves = CalculateColorMoves(board, !isWhiteTurn)
+    //if nextmoves = 0 => won game
+
+
+    //calls again for next turn from other player
+    turn(board, !isWhiteTurn);
 }
