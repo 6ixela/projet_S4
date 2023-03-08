@@ -3,8 +3,8 @@
 #ifndef MOVEPIECE_H
 #define MOVEPIECE_H
 
-size_t LenPossibleMovePown(struct piece **board, struct piece *p);
-void CreatePossibleMovePown(struct piece **board, struct piece *p);
+size_t LenPossibleMovePawn(struct piece **board, struct piece *p);
+void CreatePossibleMovePawn(struct piece **board, struct piece *p);
 
 size_t LenPossibleMoveTower(struct piece **board, struct piece *p);
 void CreatePossibleMoveTower(struct piece **board, struct piece *p);

@@ -28,6 +28,7 @@ struct piece *newPiece(char *name)
     {
         res->hasMoved = 0;
         res->isWhite = 0;
+        res->nbMoves = 0;
         res->name = malloc(len);
         res->possibleMoves = malloc(0);
         memcpy(res->name, name, len);
@@ -146,14 +147,15 @@ int movePiece(struct piece **board, int pos, int dest)
 
 void turn(struct piece **board, int isWhiteTurn)
 {
-    
     while(1)
     {
         printf("Enter piece position then destinaton:\n");
         char* piecePos = calloc(3, 1);
         char* dest = calloc(3, 1);
         fgets(piecePos, 3, stdin);
+        getchar();
         fgets(dest, 3, stdin);
+        getchar();
 
         if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
             piecePos[1] < '1' || piecePos[1] > '8' )
@@ -161,18 +163,68 @@ void turn(struct piece **board, int isWhiteTurn)
             printf("incorrect character. ");
             continue;
         }
-        int p1 = (piecePos[0] - 'a')*8 + piecePos[0] - '1';
-        int p2 = (piecePos[1] - 'a')*8 + piecePos[1] - '1';
+        int p1 = (piecePos[1] - '1')*8 + piecePos[0] - 'a';
+        int p2 = (dest[1] - '1')*8 + dest[0] - 'a';
 
+        printf("pos = %d to %d\n", p1,p2);
+
+        if(!board[p1] || !(board[p1]->isWhite == isWhiteTurn))
+        {
+            printf("No piece on this position. ");
+            continue;
+        }
         if(movePiece(board, p1,p2))
+        {
             break;
+        }
         printf("Position not accessible. ");
     }
-    //TODO: CALCUTALE ALL POS FOR OTHER PLAYER
-    //int nextMoves = CalculateColorMoves(board, !isWhiteTurn)
-    //if nextmoves = 0 => won game
 
+    printf("line 183\n");
+    int nextMoves = CalculateColorMoves(board, !isWhiteTurn);
+    printf("line 185\n");
+    if(nextMoves == 0)
+    {
+        if(isWhiteTurn)
+            printf("White Won!\n");
+        else
+            printf("Black Won!\n");
+    }
+    else
+    {
+        //calls again for next turn from other player
+        turn(board, !isWhiteTurn);
+    }
+}
 
-    //calls again for next turn from other player
-    turn(board, !isWhiteTurn);
+int CalculateColorMoves(struct piece** board, int isWhite)
+{
+    int res = 0;
+    for(size_t i = 0; i<63; i++)
+    {
+        struct piece *p = board[i];
+        if(p != NULL && p->isWhite == isWhite)
+        {
+            printf("doing %s\n", p->name);
+            size_t len = strlen(p->name);
+            if(strncmp(p->name, "pawn", len) == 0)
+                CreatePossibleMovePawn(board, p);
+
+            else if (strncmp(p->name, "knight", len) == 0)
+                CreatePossibleMoveKnight(board, p);
+            else if (strncmp(p->name, "bishop", len) == 0)
+                CreatePossibleMoveBishop(board, p, 0);
+
+            else if (strncmp(p->name, "rook", len) == 0)
+                CreatePossibleMoveTower(board, p);
+
+            else if (strncmp(p->name, "queen", len) == 0)
+                CreatePossibleMoveQueen(board, p);
+        
+            else if(strncmp(p->name, "king", len) == 0)
+                CreatePossibleMoveKing(board, p);
+            res+= p->nbMoves;
+        }
+    }
+    return res;
 }

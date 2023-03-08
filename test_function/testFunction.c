@@ -73,33 +73,14 @@ char *cara(char *c1)
 
 int main()
 {
+    printf("test\n");
     struct piece **board = newBoard();
-    //print_chess(board);
-
-    
-
-
-    //Move(board, board[6], 38);
-    Move(board, board[12], 28);
-    Move(board, board[52], 36);
-    Move(board, board[5], 33);
-    Move(board, board[3], 39);
-    Move(board, board[39], 53);
-    Move(board, board[53], 62);
-
-
-
-
-    /*printf("moved1 = %i\n", moved);
-    //moved = Move(board, board[6], 21);
-    //Move(board, board[16], 22);
-    //Move(board, board[12], 28);
-    //Move(board, board[4], 12);
-    printf("moved2 = %i\n", moved);*/
-
-    //moved = MovePown(board, board[19], 28);
-
+    printf("test\n");
     print_chess(board);
+    printf("test\n");
+
+    CalculateColorMoves(board, 1);
+    turn(board, 1);
 
     freeBoard(board);
     return 1;

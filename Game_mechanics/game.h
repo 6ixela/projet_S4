@@ -40,4 +40,7 @@ int movePiece(struct piece **board, int pos, int dest);
 //Does a turn for one player, then calls next player turn
 void turn(struct piece **board, int isWhiteTurn);
 
+//Calculate all the moves for a given color and stores them in the pieces
+int CalculateColorMoves(struct piece** board, int isWhite);
+
 #endif
