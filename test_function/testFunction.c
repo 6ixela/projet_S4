@@ -5,6 +5,7 @@
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
 #include "../Game_mechanics/movePiece.h"
+#include "../Game_mechanics/minMax.h"
 
 
 
@@ -74,12 +75,17 @@ char *cara(char *c1)
 int main()
 {
     struct piece **board = newBoard();
-    //print_chess(board);
+    print_chess(board);
 
     
 
 
-    //Move(board, board[6], 38);
+
+    int test = evalBoard(board);
+    printf("eval = %i\n", test);
+    struct piece **deepBoard = deepCopy(board);
+    print_chess(deepBoard);
+    freeBoard(deepBoard);
     /*Move(board, board[12], 28);
     Move(board, board[52], 36);
     Move(board, board[5], 33);
@@ -98,8 +104,8 @@ int main()
     printf("moved2 = %i\n", moved);*/
 
     //moved = MovePown(board, board[19], 28);
-    turn(board, 1);
-    print_chess(board);
+    /*turn(board, 1);
+    print_chess(board);*/
 
     freeBoard(board);
     return 1;

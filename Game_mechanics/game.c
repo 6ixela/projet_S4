@@ -3,6 +3,7 @@
 #include <string.h>
 #include "game.h"
 #include "movePiece.h"
+#include "../test_function/testFunction.h"
 
 
 struct piece *newPiece(char *name)
@@ -149,6 +150,7 @@ void turn(struct piece **board, int isWhiteTurn)
 {
     while(1)
     {
+        print_chess(board);
         printf("Enter piece position then destinaton:\n");
         char* piecePos = calloc(3, 1);
         char* dest = calloc(3, 1);

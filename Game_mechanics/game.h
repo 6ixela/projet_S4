@@ -33,7 +33,7 @@ int placePiece(struct piece **board, char* name, int pos);
 
 //Moves a piece from pos to dest
 //if no piece in pos or dest not in the pieces possible Moves, does nothing
-void movePiece(struct piece **board, int pos, int dest);
+int movePiece(struct piece **board, int pos, int dest);
 
 void turn(struct piece **board, int isWhiteTurn);
 int CalculateColorMoves(struct piece** board, int isWhite);
