@@ -311,13 +311,13 @@ void CreatePossibleMoveKing(struct piece **board, struct piece *p)
         p->possibleMoves[cpt] = p->pos + 7;
         cpt++;
     }
-    if(p->pos - 7 < 64 && (board[p->pos - 7] == NULL ||
+    if(p->pos - 7 > 0 && (board[p->pos - 7] == NULL ||
     board[p->pos - 7]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos - 7;
         cpt++;
     }
-    if(p->pos - 9 < 64 && (board[p->pos - 9] == NULL ||
+    if(p->pos - 9 > 0 && (board[p->pos - 9] == NULL ||
     board[p->pos - 9]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos - 9;
@@ -488,7 +488,7 @@ size_t LenPossibleMoveBishop(struct piece **board, struct piece *p)
     }
     i = p->pos + 7;
     fini = 0;
-    while(i/8-1==(i-7)/8 && !fini)
+    while(i <= 63 &&i/8-1==(i-7)/8 && !fini)
     {
         if(board[i] == NULL)
             res++;
@@ -502,7 +502,7 @@ size_t LenPossibleMoveBishop(struct piece **board, struct piece *p)
     }
     i = p->pos + 9;
     fini = 0;
-    while(i/8-1==(i-9)/8 && !fini)
+    while(i <= 63 &&i/8-1==(i-9)/8 && !fini)
     {
         if(board[i] == NULL)
             res++;
@@ -514,7 +514,6 @@ size_t LenPossibleMoveBishop(struct piece **board, struct piece *p)
         }
         i+=9;
     }
-    
     
     return res;
 }
@@ -570,7 +569,7 @@ void CreatePossibleMoveBishop(struct piece **board, struct piece *p, size_t cpt)
     }
     i = p->pos + 7;
     fini = 0;
-    while(i/8-1==(i-7)/8 && !fini)
+    while(i <= 63 &&i/8-1==(i-7)/8 && !fini)
     {
         if(board[i] == NULL)
         {
@@ -590,7 +589,7 @@ void CreatePossibleMoveBishop(struct piece **board, struct piece *p, size_t cpt)
     }
     i = p->pos + 9;
     fini = 0;
-    while(i/8-1==(i-9)/8 && !fini)
+    while(i <= 63 &&i/8-1==(i-9)/8 && !fini)
     {
         if(board[i] == NULL)
         {

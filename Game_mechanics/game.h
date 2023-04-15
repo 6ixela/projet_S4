@@ -10,8 +10,6 @@ struct piece
     int pos;
     int nbMoves;
     int *possibleMoves;
-    //TODO: idéalement avoir un array pr les moves bloqués par une autre pièce pour pas recalculer tout a chaque mouvement
-    //TODO: opti le calcul de possiblemoves avec un seul passage au lieu de 2
 };
 
 //initializes a new piece with the given name
@@ -34,13 +32,9 @@ void freeBoard(struct piece **board);
 int placePiece(struct piece **board, char* name, int pos);
 
 //Moves a piece from pos to dest
-//if no piece in pos or dest not in the pieces possible Moves, returns false
-int movePiece(struct piece **board, int pos, int dest);
+//if no piece in pos or dest not in the pieces possible Moves, does nothing
+void movePiece(struct piece **board, int pos, int dest);
 
-//Does a turn for one player, then calls next player turn
 void turn(struct piece **board, int isWhiteTurn);
-
-//Calculate all the moves for a given color and stores them in the pieces
 int CalculateColorMoves(struct piece** board, int isWhite);
-
 #endif
