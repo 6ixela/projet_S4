@@ -77,22 +77,25 @@ int main()
     struct piece **board = newBoard();
     print_chess(board);
 
-    
+    //turn(board, 1);
 
 
 
     int test = evalBoard(board);
     printf("eval = %i\n", test);
-    struct piece **deepBoard = deepCopy(board);
-    print_chess(deepBoard);
-    freeBoard(deepBoard);
-    /*Move(board, board[12], 28);
+    
+    Move(board, board[12], 28);
     Move(board, board[52], 36);
     Move(board, board[5], 33);
     Move(board, board[3], 39);
     Move(board, board[39], 53);
-    Move(board, board[53], 62);*/
+    print_chess(board);
+    printf("okkkkkkkkkkkkkkkkk\n");
+    struct piece **deepBoard = deepCopy(board);
+    Move(deepBoard, deepBoard[53], 62);
 
+    print_chess(deepBoard);
+    freeBoard(deepBoard);
 
 
 

@@ -156,8 +156,11 @@ void turn(struct piece **board, int isWhiteTurn)
         char* dest = calloc(3, 1);
         fgets(piecePos, 3, stdin);
         getchar();
+        //si pas de piece, redemander.
         fgets(dest, 3, stdin);
         getchar();
+        CalculateColorMoves(board, isWhiteTurn);
+
 
         if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
             piecePos[1] < '1' || piecePos[1] > '8' )
