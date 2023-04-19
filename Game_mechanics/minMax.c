@@ -17,7 +17,7 @@ int evalBoard(struct piece **board)
             
             if (p == NULL)
                 continue;
-            //pos permlet de savoir si piece blanche ou noir
+            //pos permet de savoir si piece blanche ou noir
             short pos = p->isWhite ? 1 : -1;
             
             
@@ -64,4 +64,70 @@ struct piece **deepCopy(struct piece **board)
     }
     
     return boardcopy;
+}
+
+int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
+int *startPos, int *destPos)
+{
+    int res = NULL;
+    if (depth == 0)
+        res = evalBoard(board);
+    else
+    {
+        int best = NULL;
+        for (size_t i = 0; i < 8; i++)
+        {
+            for (size_t j = 0; j < 8; j++)
+            {
+                struct piece *p = board[i * 8 + j];
+                
+                if (p == NULL || p->isWhite != isWhite)
+                    continue;
+                
+                for (size_t k = 0; k < p->nbMoves; p++)
+                {
+                    struct piece **newboard = deepCopy(board);
+                    movePiece(newboard, p->pos, p->possibleMoves[k]);
+                    int val = minmax(newboard, depth-1, !isWhite, 0,NULL,NULL);
+                    if(best)
+                    {
+                        if(isWhite)
+                        {
+                            if(val > best)
+                            {
+                                best = val;
+                                if(returnMove)
+                                {
+                                    *startPos = p->pos;
+                                    *destPos = p->possibleMoves[k];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(val < best)
+                            {
+                                best = val;
+                                if(returnMove)
+                                {
+                                    *startPos = p->pos;
+                                    *destPos = p->possibleMoves[k];
+                                }
+                            }
+                        }
+                    }
+                    else   
+                        best = val;
+                }
+            }
+            
+        }
+        if(best == NULL)
+        {
+            printf("TODO: minMax.c line 127\n");
+            //TODO: pas de move possible: si draw 0 sinon -inf
+        }
+        res = best;
+    }
+    return res;
 }
