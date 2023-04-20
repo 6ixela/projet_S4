@@ -82,10 +82,7 @@ int *startPos, int *destPos)
     int res;
     if (depth == 0)
     {
-        //printf("\n\ncur board:\n");
-        //print_chess(board);
         res = evalBoard(board);
-        //printf("eval = %d\n\n", res);
     }
     else
     {

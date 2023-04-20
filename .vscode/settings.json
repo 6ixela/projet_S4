@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "movepiece.h": "c",
+        "string.h": "c"
+    }
+}

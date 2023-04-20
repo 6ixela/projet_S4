@@ -119,6 +119,12 @@ int placePiece(struct piece **board, char* name, int pos)
 
 int movePiece(struct piece **board, int pos, int dest)
 {
+    return __movePiece(board, pos, dest, 1);
+}
+
+//used to be able to not filter moves. else use movePiece
+int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
+{
     struct piece *piece = board[pos];
     int res = 0;
     if(piece != NULL)
@@ -132,11 +138,13 @@ int movePiece(struct piece **board, int pos, int dest)
         }
         if(isPossible)
         {
+            
             if(board[dest] != NULL)
             {
                 //eats the piece on the position
                 freePiece(board[dest]);
             }
+            
             board[dest] = piece;
             board[pos] = NULL;
             piece->hasMoved = 1;
@@ -144,7 +152,9 @@ int movePiece(struct piece **board, int pos, int dest)
         }
         res = isPossible;
     }
-    CalculateColorMoves(board,!(piece->isWhite));
+    
+    CalculateColorMoves(board,!(piece->isWhite), filterMoves);
+    fflush(stdout);
     return res;
 }
 
@@ -161,7 +171,7 @@ void turn(struct piece **board, int isWhiteTurn)
         //si pas de piece, redemander.
         fgets(dest, 3, stdin);
         getchar();
-        CalculateColorMoves(board, isWhiteTurn);
+        CalculateColorMoves(board, isWhiteTurn, 1);
 
 
         if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
@@ -188,7 +198,7 @@ void turn(struct piece **board, int isWhiteTurn)
     }
 
     printf("line 183\n");
-    int nextMoves = CalculateColorMoves(board, !isWhiteTurn);
+    int nextMoves = CalculateColorMoves(board, !isWhiteTurn, 1);
     printf("line 185\n");
     if(nextMoves == 0)
     {
@@ -204,7 +214,7 @@ void turn(struct piece **board, int isWhiteTurn)
     }
 }
 
-int CalculateColorMoves(struct piece** board, int isWhite)
+int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves)
 {
     int res = 0;
     for(size_t i = 0; i<63; i++)
@@ -212,7 +222,8 @@ int CalculateColorMoves(struct piece** board, int isWhite)
         struct piece *p = board[i];
         if(p != NULL && p->isWhite == isWhite)
         {
-            //printf("doing %s\n", p->name);
+            //printf("doing %s at pos %d\n", p->name, i);
+            //fflush(stdout);
             size_t len = strlen(p->name);
             
             if(strncmp(p->name, "pawn", len) == 0)
@@ -221,7 +232,8 @@ int CalculateColorMoves(struct piece** board, int isWhite)
             else if (strncmp(p->name, "knight", len) == 0)
                 CreatePossibleMoveKnight(board, p);
             else if (strncmp(p->name, "bishop", len) == 0)
-                CreatePossibleMoveBishop(board, p, 0);
+                //CreatePossibleMoveBishop(board, p, 0);
+                continue;
 
             else if (strncmp(p->name, "rook", len) == 0)
                 CreatePossibleMoveTower(board, p);
@@ -231,10 +243,39 @@ int CalculateColorMoves(struct piece** board, int isWhite)
         
             else if(strncmp(p->name, "king", len) == 0)
                 CreatePossibleMoveKing(board, p);
+
+            if(filterMoves)
+                FilterMoves(board, p);
             res+= p->nbMoves;
         }
     }
     return res;
+}
+
+void FilterMoves(struct piece **board, struct piece *p)
+{
+    int removed = 0;
+    for (int i = 0; i<p->nbMoves; i++)
+    {
+        if(TestCheckmate(board,p,p->possibleMoves[i]))
+        {
+            p->possibleMoves[i] = -1;
+            removed++;
+        }
+    }
+    int* newmoves = malloc(sizeof(int) * (p->nbMoves-removed));
+    int j = 0;
+    for (int i = 0; i<p->nbMoves; i++)
+    {
+        if(p->possibleMoves[i] >= 0)
+        {
+            newmoves[j] = p->possibleMoves[i];
+            j++;
+        }
+    }
+    p->nbMoves -= removed;
+    free(p->possibleMoves);
+    p->possibleMoves = newmoves;
 }
 
 int __TestCheckmate(struct piece **board, int isWhite)
@@ -244,7 +285,6 @@ int __TestCheckmate(struct piece **board, int isWhite)
         struct piece *p = board[i];
         if(p != NULL && p->isWhite != isWhite)
         {
-            //printf("doing %s\n", p->name);
             size_t len = strlen(p->name);
             
             if(strncmp(p->name, "pawn", len) == 0)
@@ -267,7 +307,7 @@ int __TestCheckmate(struct piece **board, int isWhite)
             for(int k = 0; k<p->nbMoves;k++)
             {
                 struct piece *p2 = board[p->possibleMoves[k]];
-                if(p2 && strncmp(p2->name, "king", strlen(p2->name)))
+                if(p2 && strncmp(p2->name, "king", strlen(p2->name)) == 0)
                 {
                     return 1;
                 }
@@ -277,10 +317,10 @@ int __TestCheckmate(struct piece **board, int isWhite)
     return 0;
 }
 
-int TestChekmate(struct piece **board ,struct piece *piece, int dest)
+int TestCheckmate(struct piece **board ,struct piece *piece, int dest)
 {
     struct piece **copy = deepCopy(board);
-    movePiece(copy, piece->pos, dest);
+    __movePiece(copy, piece->pos, dest, 0);
     int res = __TestCheckmate(copy, piece->isWhite);
     freeBoard(copy);
     return res;

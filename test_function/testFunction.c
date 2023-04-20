@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <ctype.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
 #include "../Game_mechanics/movePiece.h"
@@ -32,6 +33,7 @@ void print_chess(struct piece **tab)
     }
     printf("_________________\n");
 }
+
 
 char *recupPiece(struct piece *p)
 {
@@ -70,80 +72,140 @@ char *cara(char *c1)
     return c2;
 }
 
+char *recupPiecev2(struct piece *p, int pos)
+{
+    char *res = malloc(3);
+    if(p == NULL)
+        snprintf(res, 3, "%02d", pos);
+    else
+    {
+        size_t len = strlen(p->name);
+        if(strncmp(p->name, "pawn", len) == 0)
+            res = "♙ ";
+        else if (strncmp(p->name, "knight", len) == 0)
+            res = "♘ ";
+        else if (strncmp(p->name, "bishop", len) == 0)
+            res = "♗ ";
+        else if (strncmp(p->name, "rook", len) == 0)
+            res = "♖ ";
+        else if (strncmp(p->name, "queen", len) == 0)
+            res = "♕ ";
+        else if(strncmp(p->name, "king", len) == 0)
+            res = "♔ ";
+    }
+    return res;
+}
+void print_chessv2(struct piece **tab)
+{
+    printf("_________________\n");
+    for(size_t i = 0; i < 8; i++)
+    {
+        printf("|");
+        for (size_t j = 0; j < 8; j++)
+        {
+            char *piece = recupPiecev2(tab[i * 8 + j], i * 8 + j);
+            if (tab[i * 8 + j] != NULL && !tab[i * 8 + j]->isWhite)
+            {
+                printf("\033[0;32m");
+                printf("%s", piece);
+                printf("\033[0m");
+                printf("|");
+            }
+            else
+                printf("%s|", piece);
+        }
+        printf("\n");
+    }
+    printf("_________________\n");
+}
 
+
+struct piece **LoadFromFen(char* fen)
+{
+    struct piece **board = malloc(sizeof(struct piece*) * 64);
+    for (int i = 0; i<64; i++)
+    {
+        board[i] = NULL;
+    }
+
+    int i = 0;
+    while(*fen != 0 && *fen != ' ')
+    {
+        char c = *fen;
+        int isWhite = 1;
+        if(isupper(c))
+        {
+            isWhite = 0;
+            c = tolower(c);
+        }
+        if(c == 'r')
+            placePiece(board, "rook", i);
+        else if (c == 'n')
+            placePiece(board, "knight", i);
+        else if (c == 'b')
+            placePiece(board, "bishop", i);
+        else if (c == 'q')
+            placePiece(board, "queen", i);
+        else if (c == 'k')
+            placePiece(board, "king", i);
+        else if (c == 'p')
+            placePiece(board, "pawn", i);
+        else if (c >= '1' && c <= '8')
+            i+= *fen - '0';
+        if(c=='r'||c=='n'||c=='b'||c=='q'||c=='k'||c=='p')
+        {
+            if(isWhite)
+                board[i]->isWhite = 1;
+            i++;
+        }
+        fen++;
+    }
+    return board;
+}
+
+int testAllMoves(struct piece **board, int depth, int isWhite)
+{
+    if(depth == 0)
+        return 1;
+    
+    int nbpos = 0;
+    for(int i = 0; i<64; i++)
+    {
+        struct piece *p = board[i];
+        if(p != NULL && p->isWhite == isWhite)
+        {
+            for(int k = 0; k<p->nbMoves; k++)
+            {
+                struct piece **copy = deepCopy(board);
+                movePiece(copy, p->pos, p->possibleMoves[k]);
+                nbpos += testAllMoves(copy,depth-1, !isWhite);
+                freeBoard(copy);
+            }
+        }
+    }
+    return nbpos;
+}
 
 int main()
 {
-    struct piece **board = newBoard();
-    print_chess(board);
+    struct piece **b1 = LoadFromFen("rn1q1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R");
+    print_chessv2(b1);
 
-    //turn(board, 1);
+    struct piece **b2 = LoadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    print_chessv2(b2);
 
+    CalculateColorMoves(b2,0,1);
+    CalculateColorMoves(b2,1,1);
 
-    /*
-    int test = evalBoard(board);
-    printf("eval = %i\n", test);
-    
-    Move(board, board[12], 28);
-    Move(board, board[52], 36);
-    Move(board, board[5], 33);
-    Move(board, board[3], 39);
-    Move(board, board[39], 53);
-    print_chess(board);
-    
-    //CalculateColorMoves(board, 1);
-    CalculateColorMoves(board,0);
-    int start = -1;
-    int dest = -1;
-    int retval = minmax(board, 3, 0, 1, &start, &dest);
-    printf("movement found = %d-%d\n Return val = %d\n", start, dest, retval);
-    MovePiece(board, board[start], dest);
-    print_chess(board);
-
-    /*printf("moved1 = %i\n", moved);
-    //moved = Move(board, board[6], 21);
-    //Move(board, board[16], 22);
-    //Move(board, board[12], 28);
-    //Move(board, board[4], 12);
-    printf("moved2 = %i\n", moved);*/
-
-    //moved = MovePown(board, board[19], 28);
-    /*turn(board, 1);
-    print_chess(board);*/
-
-    CalculateColorMoves(board,0);
-    CalculateColorMoves(board,1);
-
-    
-    printf("\n");
-    movePiece(board, 12, 28);
-    movePiece(board, 52,36);
-    movePiece(board,5,33);
-    movePiece(board,48,40);
-    movePiece(board,11,19);
-
-    struct piece *p = board[40];
-    printf("piece pos 40 moves (%d moves): ", p->nbMoves);
-    for(int i = 0; i<p->nbMoves; i++)
+    for(int i = 1;i<4;i++)
     {
-        printf("%d, ",p->possibleMoves[i]);
+        int nbmoves = testAllMoves(b2, i, 1);
+
+        printf("nbmoves for board 2 at depth %d = %d\n", i,nbmoves);
     }
 
-    int start = -1;
-    int dest = -1;
-    fflush(stdout);
-    int retval = minmax(board, 3, 0, 1, &start, &dest);
-    printf("movement found = %d-%d\n Return val = %d\n", start, dest, retval);
 
-    
-    print_chess(board);
-
-    movePiece(board, start, dest);
-
-    print_chess(board);
-
-
-
-    freeBoard(board);
+    freeBoard(b1);
+    freeBoard(b2);
     return 1;
 }

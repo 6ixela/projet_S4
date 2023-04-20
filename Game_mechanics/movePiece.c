@@ -35,7 +35,8 @@ size_t LenPossibleMovePawn(struct piece **board, struct piece *p)
         res++;
     }
     if (!p->hasMoved)
-        if(board[p->pos+2*isWhite] == NULL)
+        if(p->pos+2*isWhite >= 0 && p->pos+2*isWhite < 64 && 
+            board[p->pos+2*isWhite] == NULL)
             res++;    
     return res;
 }
@@ -67,7 +68,8 @@ void CreatePossibleMovePawn(struct piece **board, struct piece *p)
 
     if (!p->hasMoved)
     {
-        if(board[p->pos+2*isWhite] == NULL)
+        if(p->pos+2*isWhite >= 0 && p->pos+2*isWhite < 64 && 
+            board[p->pos+2*isWhite] == NULL)
         {
             p->possibleMoves[cpt] = p->pos+2*isWhite;
         }

@@ -35,6 +35,13 @@ int placePiece(struct piece **board, char* name, int pos);
 //if no piece in pos or dest not in the pieces possible Moves, does nothing
 int movePiece(struct piece **board, int pos, int dest);
 
+//used to be able to not filter moves. else use movePiece
+int __movePiece(struct piece **board, int pos, int dest, int filterMoves);
+
 void turn(struct piece **board, int isWhiteTurn);
-int CalculateColorMoves(struct piece** board, int isWhite);
+int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves);
+
+void FilterMoves(struct piece **board, struct piece *p);
+
+int TestCheckmate(struct piece **board ,struct piece *piece, int dest);
 #endif
