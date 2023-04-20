@@ -80,7 +80,7 @@ int main()
     //turn(board, 1);
 
 
-
+    /*
     int test = evalBoard(board);
     printf("eval = %i\n", test);
     
@@ -90,14 +90,15 @@ int main()
     Move(board, board[3], 39);
     Move(board, board[39], 53);
     print_chess(board);
-    printf("okkkkkkkkkkkkkkkkk\n");
-    struct piece **deepBoard = deepCopy(board);
-    Move(deepBoard, deepBoard[53], 62);
-
-    print_chess(deepBoard);
-    freeBoard(deepBoard);
-
-
+    
+    //CalculateColorMoves(board, 1);
+    CalculateColorMoves(board,0);
+    int start = -1;
+    int dest = -1;
+    int retval = minmax(board, 3, 0, 1, &start, &dest);
+    printf("movement found = %d-%d\n Return val = %d\n", start, dest, retval);
+    MovePiece(board, board[start], dest);
+    print_chess(board);
 
     /*printf("moved1 = %i\n", moved);
     //moved = Move(board, board[6], 21);
@@ -109,6 +110,39 @@ int main()
     //moved = MovePown(board, board[19], 28);
     /*turn(board, 1);
     print_chess(board);*/
+
+    CalculateColorMoves(board,0);
+    CalculateColorMoves(board,1);
+
+    
+    printf("\n");
+    movePiece(board, 12, 28);
+    movePiece(board, 52,36);
+    movePiece(board,5,33);
+    movePiece(board,48,40);
+    movePiece(board,11,19);
+
+    struct piece *p = board[40];
+    printf("piece pos 40 moves (%d moves): ", p->nbMoves);
+    for(int i = 0; i<p->nbMoves; i++)
+    {
+        printf("%d, ",p->possibleMoves[i]);
+    }
+
+    int start = -1;
+    int dest = -1;
+    fflush(stdout);
+    int retval = minmax(board, 3, 0, 1, &start, &dest);
+    printf("movement found = %d-%d\n Return val = %d\n", start, dest, retval);
+
+    
+    print_chess(board);
+
+    movePiece(board, start, dest);
+
+    print_chess(board);
+
+
 
     freeBoard(board);
     return 1;

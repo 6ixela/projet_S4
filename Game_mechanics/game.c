@@ -3,6 +3,7 @@
 #include <string.h>
 #include "game.h"
 #include "movePiece.h"
+#include "minMax.h"
 #include "../test_function/testFunction.h"
 
 
@@ -143,6 +144,7 @@ int movePiece(struct piece **board, int pos, int dest)
         }
         res = isPossible;
     }
+    CalculateColorMoves(board,!(piece->isWhite));
     return res;
 }
 
@@ -210,10 +212,11 @@ int CalculateColorMoves(struct piece** board, int isWhite)
         struct piece *p = board[i];
         if(p != NULL && p->isWhite == isWhite)
         {
-            printf("doing %s\n", p->name);
+            //printf("doing %s\n", p->name);
             size_t len = strlen(p->name);
+            
             if(strncmp(p->name, "pawn", len) == 0)
-                CreatePossibleMovePawn(board, p);
+                CreatePossibleMovePawn(board, p);            
 
             else if (strncmp(p->name, "knight", len) == 0)
                 CreatePossibleMoveKnight(board, p);
@@ -231,5 +234,54 @@ int CalculateColorMoves(struct piece** board, int isWhite)
             res+= p->nbMoves;
         }
     }
+    return res;
+}
+
+int __TestCheckmate(struct piece **board, int isWhite)
+{
+    for(size_t i = 0; i<63; i++)
+    {
+        struct piece *p = board[i];
+        if(p != NULL && p->isWhite != isWhite)
+        {
+            //printf("doing %s\n", p->name);
+            size_t len = strlen(p->name);
+            
+            if(strncmp(p->name, "pawn", len) == 0)
+                CreatePossibleMovePawn(board, p);            
+
+            else if (strncmp(p->name, "knight", len) == 0)
+                CreatePossibleMoveKnight(board, p);
+            else if (strncmp(p->name, "bishop", len) == 0)
+                CreatePossibleMoveBishop(board, p, 0);
+
+            else if (strncmp(p->name, "rook", len) == 0)
+                CreatePossibleMoveTower(board, p);
+
+            else if (strncmp(p->name, "queen", len) == 0)
+                CreatePossibleMoveQueen(board, p);
+        
+            else if(strncmp(p->name, "king", len) == 0)
+                CreatePossibleMoveKing(board, p);
+            
+            for(int k = 0; k<p->nbMoves;k++)
+            {
+                struct piece *p2 = board[p->possibleMoves[k]];
+                if(p2 && strncmp(p2->name, "king", strlen(p2->name)))
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int TestChekmate(struct piece **board ,struct piece *piece, int dest)
+{
+    struct piece **copy = deepCopy(board);
+    movePiece(copy, piece->pos, dest);
+    int res = __TestCheckmate(copy, piece->isWhite);
+    freeBoard(copy);
     return res;
 }

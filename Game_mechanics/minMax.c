@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 int evalBoard(struct piece **board)
 {
@@ -22,7 +23,7 @@ int evalBoard(struct piece **board)
             
             
             size_t len = strlen(p->name);
-            if(strncmp(p->name, "pawn", len) == 0)
+            /*if(strncmp(p->name, "pawn", len) == 0)
                 res += p->value * pos;
             else if (strncmp(p->name, "knight", len) == 0)
                 res += p->value * pos;
@@ -32,6 +33,8 @@ int evalBoard(struct piece **board)
                 res += p->value * pos;
             else if (strncmp(p->name, "queen", len) == 0)
                 res += p->value * pos;
+            */
+           res += p->value * pos;
         }
         
     }
@@ -55,6 +58,13 @@ struct piece **deepCopy(struct piece **board)
                 pNew->isWhite = p->isWhite;
                 pNew->pos = p->pos;
                 pNew->value = p->value;
+                pNew->nbMoves = p->nbMoves;
+                free(pNew->possibleMoves);
+                pNew->possibleMoves = malloc(sizeof(int)* p->nbMoves);
+                for (int i = 0; i < p->nbMoves; i++)
+                {
+                    pNew->possibleMoves[i] = p->possibleMoves[i];
+                }
                 boardcopy[i*8+j] = pNew;
             }
             else
@@ -69,12 +79,19 @@ struct piece **deepCopy(struct piece **board)
 int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos)
 {
-    int res = NULL;
+    int res;
     if (depth == 0)
+    {
+        //printf("\n\ncur board:\n");
+        //print_chess(board);
         res = evalBoard(board);
+        //printf("eval = %d\n\n", res);
+    }
     else
     {
-        int best = NULL;
+        int best = INT_MAX;
+        if (isWhite)
+            best = INT_MIN;
         for (size_t i = 0; i < 8; i++)
         {
             for (size_t j = 0; j < 8; j++)
@@ -84,45 +101,43 @@ int *startPos, int *destPos)
                 if (p == NULL || p->isWhite != isWhite)
                     continue;
                 
-                for (size_t k = 0; k < p->nbMoves; p++)
+                for (size_t k = 0; k < p->nbMoves; k++)
                 {
                     struct piece **newboard = deepCopy(board);
-                    movePiece(newboard, p->pos, p->possibleMoves[k]);
+                    int moved = movePiece(newboard, p->pos, p->possibleMoves[k]);
+                    //printf("moved = %d\n",moved);
                     int val = minmax(newboard, depth-1, !isWhite, 0,NULL,NULL);
-                    if(best)
+                    //printf("val = %d\n", val);
+                    freeBoard(newBoard());
+                    if(isWhite)
                     {
-                        if(isWhite)
+                        if(val > best)
                         {
-                            if(val > best)
+                            best = val;
+                            if(returnMove)
                             {
-                                best = val;
-                                if(returnMove)
-                                {
-                                    *startPos = p->pos;
-                                    *destPos = p->possibleMoves[k];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if(val < best)
-                            {
-                                best = val;
-                                if(returnMove)
-                                {
-                                    *startPos = p->pos;
-                                    *destPos = p->possibleMoves[k];
-                                }
+                                *startPos = p->pos;
+                                *destPos = p->possibleMoves[k];
                             }
                         }
                     }
-                    else   
-                        best = val;
+                    else
+                    {
+                        if(val < best)
+                        {
+                            best = val;
+                            if(returnMove)
+                            {
+                                *startPos = p->pos;
+                                *destPos = p->possibleMoves[k];
+                            }
+                        }
+                    }
                 }
             }
             
         }
-        if(best == NULL)
+        if(best == INT_MAX || best == INT_MIN)
         {
             printf("TODO: minMax.c line 127\n");
             //TODO: pas de move possible: si draw 0 sinon -inf
