@@ -259,25 +259,25 @@ size_t LenPossibleMoveKing(struct piece **board, struct piece *p)
     if(p->pos + 8 < 64 && (board[p->pos + 8] == NULL ||
     board[p->pos + 8]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 8 > 0 && (board[p->pos - 8] == NULL ||
+    if(p->pos - 8 >= 0 && (board[p->pos - 8] == NULL ||
     board[p->pos - 8]->isWhite != p->isWhite))
         res++;
-    if(p->pos + 9 < 64 && (board[p->pos + 9] == NULL ||
+    if((p->pos + 9)/8 == p->pos/8+1 && p->pos + 9 < 64  && (board[p->pos + 9] == NULL ||
     board[p->pos + 9]->isWhite != p->isWhite))
         res++;
-    if(p->pos + 7 < 64 && (board[p->pos + 7] == NULL ||
+    if((p->pos + 7)/8 == p->pos/8+1 && p->pos + 9 < 64  && (board[p->pos + 7] == NULL ||
     board[p->pos + 7]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 7 > 0 && (board[p->pos - 7] == NULL ||
+    if(p->pos - 7 >= 0 && (p->pos - 7)/8 == p->pos/8-1 &&(board[p->pos - 7] == NULL ||
     board[p->pos - 7]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 9 > 0 && (board[p->pos - 9] == NULL ||
+    if(p->pos - 9 >= 0 && (p->pos - 9)/8 == p->pos/8-1&& (board[p->pos - 9] == NULL ||
     board[p->pos - 9]->isWhite != p->isWhite))
         res++;
-    if((p->pos + 1)/8 == p->pos&& (board[p->pos + 1] == NULL ||
+    if((p->pos + 1)/8 == p->pos/8 && (board[p->pos + 1] == NULL ||
     board[p->pos + 1]->isWhite != p->isWhite))
         res++;
-    if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos &&
+    if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos/8 &&
     (board[p->pos - 1] == NULL || board[p->pos - 1]->isWhite != p->isWhite))
         res++;
     return res;
@@ -295,43 +295,43 @@ void CreatePossibleMoveKing(struct piece **board, struct piece *p)
         p->possibleMoves[cpt] = p->pos + 8;
         cpt++;
     }
-    if(p->pos - 8 > 0 && (board[p->pos - 8] == NULL ||
+    if(p->pos - 8 >= 0 && (board[p->pos - 8] == NULL ||
     board[p->pos - 8]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos - 8;
         cpt++;
     }
-    if(p->pos + 9 < 64 && (board[p->pos + 9] == NULL ||
+    if((p->pos + 9)/8 == p->pos/8+1 && p->pos + 9 < 64  && (board[p->pos + 9] == NULL ||
     board[p->pos + 9]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos + 9;
         cpt++;
     }
-    if(p->pos + 7 < 64 && (board[p->pos + 7] == NULL ||
+    if((p->pos + 7)/8 == p->pos/8+1 && p->pos + 9 < 64  && (board[p->pos + 7] == NULL ||
     board[p->pos + 7]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos + 7;
         cpt++;
     }
-    if(p->pos - 7 > 0 && (board[p->pos - 7] == NULL ||
+    if(p->pos - 7 >= 0 && (p->pos - 7)/8 == p->pos/8-1 &&(board[p->pos - 7] == NULL ||
     board[p->pos - 7]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos - 7;
         cpt++;
     }
-    if(p->pos - 9 > 0 && (board[p->pos - 9] == NULL ||
+    if(p->pos - 9 >= 0 && (p->pos - 9)/8 == p->pos/8-1&& (board[p->pos - 9] == NULL ||
     board[p->pos - 9]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos - 9;
         cpt++;
     }
-    if((p->pos + 1)/8 == p->pos&& (board[p->pos + 1] == NULL ||
+    if((p->pos + 1)/8 == p->pos/8 && (board[p->pos + 1] == NULL ||
     board[p->pos + 1]->isWhite != p->isWhite))
     {
         p->possibleMoves[cpt] = p->pos + 1;
         cpt++;
     }
-    if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos &&
+    if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos/8 &&
     (board[p->pos - 1] == NULL || board[p->pos - 1]->isWhite != p->isWhite))
         p->possibleMoves[cpt] = p->pos - 1;
 }
