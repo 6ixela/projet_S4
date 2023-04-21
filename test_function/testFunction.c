@@ -194,6 +194,18 @@ int main()
     struct piece **b2 = LoadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     print_chessv2(b2);
 
+    struct piece **b3 = LoadFromFen("rnb1kbnr/ppp2pp/2q5/4p3/8/2N5/PPPP1PPP/R1BQKBNR");
+    //struct piece **b3 = LoadFromFen("RNB1KBNR/PPP2PP/2Q5/4p3/8/2N5/PPPP1PPP/R1BQKBNR");
+
+    //struct piece **b3 = LoadFromFen("1Q6/7p/p7/P7/q2pRp2/3q1PpP/6P1/4K3");
+    //struct piece **b3 = LoadFromFen("rnb1k2r/pppp1ppp/8/8/3bP3/2N1B3/PPP3PP/R4BKR");
+    CalculateColorMoves(b3,1,1);
+    print_chessv2(b3);
+    int s = 0;
+    int e = 0;
+    minmax(b3, 3,1, 1, &s, &e);
+    printf("start = %i\nend = %i\n", s, e);
+    print_chessv2(b3);
     CalculateColorMoves(b2,0,1);
     CalculateColorMoves(b2,1,1);
 
