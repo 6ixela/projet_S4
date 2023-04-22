@@ -44,4 +44,6 @@ int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves);
 void FilterMoves(struct piece **board, struct piece *p);
 
 int TestCheckmate(struct piece **board ,struct piece *piece, int dest);
+
+int isCheck(struct piece **board, int isWhite);
 #endif

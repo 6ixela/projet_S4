@@ -21,7 +21,9 @@ struct piece *newPiece(char *name)
         res->value = 500;
     else if (strncmp(name, "queen", len) == 0)
         res->value = 900;
-    else if (strncmp(name, "king", len) != 0)
+    else if (strncmp(name, "king", len) == 0)
+        res->value = 2000;
+    else
     {
         free(res);
         res = NULL;
@@ -324,4 +326,26 @@ int TestCheckmate(struct piece **board ,struct piece *piece, int dest)
     int res = __TestCheckmate(copy, piece->isWhite);
     freeBoard(copy);
     return res;
+}
+
+int isCheck(struct piece **board, int isWhite)
+{
+    for(size_t i = 0; i<63; i++)
+    {
+        struct piece *p = board[i];
+        if(p!=NULL && p->isWhite != isWhite)
+        {
+            for(int k = 0; k<p->nbMoves; k++)
+            {
+                struct piece *p2 = board[p->possibleMoves[k]];
+                if(p2 != NULL && strncmp(p2->name,"king", strlen(p2->name))==0)
+                {
+                    printf("end1\n");
+                    fflush(stdout);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
 }
