@@ -140,7 +140,6 @@ int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
         }
         if(isPossible)
         {
-            
             if(board[dest] != NULL)
             {
                 //eats the piece on the position
@@ -154,9 +153,7 @@ int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
         }
         res = isPossible;
     }
-    
     CalculateColorMoves(board,!(piece->isWhite), filterMoves);
-    fflush(stdout);
     return res;
 }
 
@@ -234,8 +231,7 @@ int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves)
             else if (strncmp(p->name, "knight", len) == 0)
                 CreatePossibleMoveKnight(board, p);
             else if (strncmp(p->name, "bishop", len) == 0)
-                //CreatePossibleMoveBishop(board, p, 0);
-                continue;
+                CreatePossibleMoveBishop(board, p, 0);
 
             else if (strncmp(p->name, "rook", len) == 0)
                 CreatePossibleMoveTower(board, p);
@@ -330,6 +326,7 @@ int TestCheckmate(struct piece **board ,struct piece *piece, int dest)
 
 int isCheck(struct piece **board, int isWhite)
 {
+    CalculateColorMoves(board, !isWhite, 0);
     for(size_t i = 0; i<63; i++)
     {
         struct piece *p = board[i];
@@ -340,8 +337,6 @@ int isCheck(struct piece **board, int isWhite)
                 struct piece *p2 = board[p->possibleMoves[k]];
                 if(p2 != NULL && strncmp(p2->name,"king", strlen(p2->name))==0)
                 {
-                    printf("end1\n");
-                    fflush(stdout);
                     return 1;
                 }
             }

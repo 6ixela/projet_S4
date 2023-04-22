@@ -9,7 +9,6 @@
 #include "../Game_mechanics/minMax.h"
 
 
-
 void print_chess(struct piece **tab)
 {
     printf("_________________\n");
@@ -188,16 +187,8 @@ int testAllMoves(struct piece **board, int depth, int isWhite)
 
 int main()
 {
-    struct piece **b1 = LoadFromFen("k7/8/8/6p1/5P2/2p5/p7/K7");
+    struct piece **b1 = newBoard();
     print_chessv2(b1);
-
-    
-    CalculateColorMoves(b1,1,1);
-    int s = 0;
-    int e = 0;
-    printf("evaluation = %d\n",evalBoard(b1));
-    //minmax(b1, 1,1, 1, &s, &e);
-    //printf("start = %i\nend = %i\n", s, e);
 
     freeBoard(b1);
     return 1;

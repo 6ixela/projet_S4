@@ -7,7 +7,6 @@
 #include <string.h>
 #include <limits.h>
 
-int cpt = 0;
 
 int evalBoard(struct piece **board)
 {
@@ -36,9 +35,7 @@ int evalBoard(struct piece **board)
             else if (strncmp(p->name, "queen", len) == 0)
                 res += p->value * pos;
             */
-           printf("value of %s = %d -> %d\n", p->name, p->value, p->value * pos);
            res += p->value * pos;
-           printf("res = %d\n", res);
         }
         
     }
@@ -83,18 +80,10 @@ struct piece **deepCopy(struct piece **board)
 int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos)
 {
-    cpt++;
-    printf("board of n%d (depth = %d):\n", cpt, depth);
-    print_chessv2(board);
-    fflush(stdout);
     int res;
     if (depth == 0)
     {
-        printf("leaf of n%d: return = ", cpt);
-        fflush(stdout);
         res = evalBoard(board);
-        printf("%d\n", res);
-        fflush(stdout);
     }
     else
     {
@@ -113,10 +102,8 @@ int *startPos, int *destPos)
                 for (size_t k = 0; k < p->nbMoves; k++)
                 {
                     struct piece **newboard = deepCopy(board);
-                    int moved=movePiece(newboard, p->pos, p->possibleMoves[k]);
-                    //printf("moved = %d\n",moved);
+                    movePiece(newboard, p->pos, p->possibleMoves[k]);
                     int val = minmax(newboard, depth-1, !isWhite, 0,NULL,NULL);
-                    //printf("val = %d\n", val);
                     freeBoard(newBoard());
                     if(isWhite)
                     {
@@ -148,14 +135,10 @@ int *startPos, int *destPos)
         }
         if(best == INT_MAX || best == INT_MIN)
         {
-            printf("leaf of n%d (no moves): return = ", cpt);
-            fflush(stdout);
             if(!isCheck(board, isWhite))
             {
                 best = 0;
             }
-            printf("%d at depth %d\n", best, depth);
-            fflush(stdout);
         }
         res = best;
     }

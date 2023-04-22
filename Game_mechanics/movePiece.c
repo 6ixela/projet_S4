@@ -23,14 +23,16 @@ size_t LenPossibleMovePawn(struct piece **board, struct piece *p)
     size_t res = 0;
 
     int isWhite = p->isWhite ? 8 : -8;
-    if (board[p->pos+isWhite] == NULL)
+    if (p->pos+isWhite < 64 && board[p->pos+isWhite] == NULL)
         res++;
-    if((p->pos+isWhite-1)/8 == p->pos/8+(isWhite/8) && board[p->pos+isWhite-1] != NULL)
+    if(p->pos+isWhite-1 < 64 && (p->pos+isWhite-1)/8 == p->pos/8+(isWhite/8) &&
+        board[p->pos+isWhite-1] != NULL)
     {
         res++;
     }
 
-    if((p->pos+isWhite+1)/8 == p->pos/8+(isWhite/8) && board[p->pos+isWhite+1] != NULL)
+    if(p->pos+isWhite+1 < 64 && (p->pos+isWhite+1)/8 == p->pos/8+(isWhite/8) && 
+        board[p->pos+isWhite+1] != NULL)
     {
         res++;
     }
@@ -48,19 +50,21 @@ void CreatePossibleMovePawn(struct piece **board, struct piece *p)
     size_t cpt = 0;
     int isWhite = p->isWhite ? 8 : -8;
 
-    if (board[p->pos+isWhite] == NULL)
+    if (p->pos+isWhite < 64 && board[p->pos+isWhite] == NULL)
     {
         p->possibleMoves[cpt] = p->pos+isWhite;
         cpt++;
     }
 
-    if((p->pos+isWhite-1)/8 == p->pos/8+(isWhite/8) && board[p->pos+isWhite-1] != NULL)
+    if(p->pos+isWhite-1 < 64 && (p->pos+isWhite-1)/8 == p->pos/8+(isWhite/8) 
+        && board[p->pos+isWhite-1] != NULL)
     {
         p->possibleMoves[cpt] = p->pos+isWhite-1;
         cpt++;
     }
     
-    if((p->pos+isWhite+1)/8 == p->pos/8+(isWhite/8) && board[p->pos+isWhite+1] != NULL)
+    if(p->pos+isWhite+1 < 64 &&(p->pos+isWhite+1)/8 == p->pos/8+(isWhite/8) && 
+        board[p->pos+isWhite+1] != NULL)
     {
         p->possibleMoves[cpt] = p->pos+isWhite+1;
         cpt++;
