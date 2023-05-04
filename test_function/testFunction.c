@@ -189,6 +189,15 @@ int main()
 {
     struct piece **b1 = newBoard();
     print_chessv2(b1);
+    CalculateColorMoves(b1, 1, 1);
+    
+    CalculateColorMoves(b1, 0, 1);
+    int s;
+    int d;
+    minmaxOpti(b1, 3, 1, 1, &s,&d);
+    movePiece(b1,s,d);
+
+    print_chessv2(b1);
 
     freeBoard(b1);
     return 1;
