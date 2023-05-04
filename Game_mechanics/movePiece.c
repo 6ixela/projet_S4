@@ -622,7 +622,7 @@ void printMove(struct piece *p)
 {
     for (size_t i = 0; (int)i < p->nbMoves; i++)
     {
-        printf("move %li = %i\n", i, p->possibleMoves[i]);
+        printf("move %d = %i\n", i, p->possibleMoves[i]);
     }
 }
 

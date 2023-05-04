@@ -178,6 +178,8 @@ int *startPos, int *destPos)
 int minmaxOpti(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos)
 {
+    print_chessv2(board);
+    fflush(stdout);
     int res;
     if (depth == 0)
     {
@@ -209,7 +211,7 @@ int *startPos, int *destPos)
                     printf("test1\n");
                     printf("BEFORE : p = %s at %d, dup = %s at %d\n", p->name, p->pos, dup->name,dup->pos);
                     fflush(stdout);
-                    int val = minmax(board, depth-1, !isWhite, 0,NULL,NULL);
+                    int val = minmaxOpti(board, depth-1, !isWhite, 0,NULL,NULL);
                     if(val == -1)
                     {
                         printf("returned -1 at pos %d to %d\n", p->pos, p->possibleMoves[k]);

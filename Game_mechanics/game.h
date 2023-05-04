@@ -33,17 +33,25 @@ int placePiece(struct piece **board, char* name, int pos);
 
 //Moves a piece from pos to dest
 //if no piece in pos or dest not in the pieces possible Moves, does nothing
+//returns 0 if movement was not possible
 int movePiece(struct piece **board, int pos, int dest);
 
 //used to be able to not filter moves. else use movePiece
 int __movePiece(struct piece **board, int pos, int dest, int filterMoves);
 
+//used to play the game in the console
 void turn(struct piece **board, int isWhiteTurn);
+
+//Calculates the possible moves of all pieces of a color and stores it in the
+//pieces. returns number of moves found for testing
 int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves);
 
+//filters the moves of a piece to remove impossible ones (that leaves in check)
 void FilterMoves(struct piece **board, struct piece *p);
 
+//tests if a move makes the mover be in check (used for FilterMoves)
 int TestCheckmate(struct piece **board ,struct piece *piece, int dest);
 
+//verify if king of a color is in check
 int isCheck(struct piece **board, int isWhite);
 #endif

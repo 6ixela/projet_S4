@@ -194,7 +194,7 @@ int main()
     CalculateColorMoves(b1, 0, 1);
     int s;
     int d;
-    minmaxOpti(b1, 3, 1, 1, &s,&d);
+    minmax(b1, 3, 1, 1, &s,&d);
     movePiece(b1,s,d);
 
     print_chessv2(b1);
