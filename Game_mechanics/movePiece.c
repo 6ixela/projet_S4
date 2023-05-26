@@ -288,6 +288,22 @@ size_t LenPossibleMoveKing(struct piece **board, struct piece *p)
     if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos/8 &&
     (board[p->pos - 1] == NULL || board[p->pos - 1]->isWhite != p->isWhite))
         res++;
+    if (!p->hasMoved)
+    {
+        //check si rock possible
+        size_t i = 1;
+        while (i < 5 && board[p->pos-i]==NULL)
+            i++;
+        if (i == 4 && !strcmp(board[p->pos-i]->name, "rook"))
+            res++;
+        i=1;
+        while (i < 4 && board[p->pos+i]==NULL)
+        {
+            i++;
+        }
+        if (i == 3 && !strcmp(board[p->pos+i]->name, "rook"))
+            res++;
+    }
     return res;
 }
 
@@ -341,7 +357,31 @@ void CreatePossibleMoveKing(struct piece **board, struct piece *p)
     }
     if(p->pos - 1 >= 0 && (p->pos - 1)/8 == p->pos/8 &&
     (board[p->pos - 1] == NULL || board[p->pos - 1]->isWhite != p->isWhite))
+    {
         p->possibleMoves[cpt] = p->pos - 1;
+        cpt++;
+    }
+    
+    if (!p->hasMoved)
+    {
+        //check si rock possible
+        size_t i = 1;
+        while (i < 5 && board[p->pos-i]==NULL)
+            i++;
+        if (i == 4 && !strcmp(board[p->pos-i]->name, "rook"))
+        {
+            p->possibleMoves[cpt] = p->pos - 2;
+            cpt++;
+        }
+        i=1;
+        while (i < 4 && board[p->pos+i]==NULL)
+            i++;
+        
+        if (i == 3 && !strcmp(board[p->pos+i]->name, "rook"))
+        {
+            p->possibleMoves[cpt] = p->pos + 2;
+        }  
+    }
 }
 
 int Move(struct piece **board, struct piece *p, int dst)
@@ -622,7 +662,7 @@ void printMove(struct piece *p)
 {
     for (size_t i = 0; (int)i < p->nbMoves; i++)
     {
-        printf("move %d = %i\n", i, p->possibleMoves[i]);
+        printf("move %ld = %i\n", i, p->possibleMoves[i]);
     }
 }
 

@@ -121,7 +121,7 @@ int placePiece(struct piece **board, char* name, int pos)
 
 int movePiece(struct piece **board, int pos, int dest)
 {
-    return __movePiece(board, pos, dest, 1);
+    return __movePiece(board, pos, dest, 0);
 }
 
 //used to be able to not filter moves. else use movePiece
@@ -140,19 +140,44 @@ int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
         }
         if(isPossible)
         {
+            if (!strcmp(piece->name, "king"))
+            {
+                if (piece->pos == dest-2 || piece->pos == dest+2)
+                {
+                    size_t k = 0;
+                    size_t k_dst = 0;
+                    if (dest < piece->pos)
+                    {
+                        k = piece->pos-4;
+                        k_dst = piece->pos-1;
+                    }
+                    else
+                    {
+                        k = piece->pos+3;
+                        k_dst = piece->pos+1;
+                    }
+                    board[k_dst] = board[k];
+                    board[k] = NULL;
+                    board[k_dst]->hasMoved = 1;
+                    board[k_dst]->pos = k_dst;
+                }
+                
+            }
+            
             if(board[dest] != NULL)
             {
                 //eats the piece on the position
                 freePiece(board[dest]);
             }
             
-            board[dest] = piece;
+            board[dest] = board[pos];
             board[pos] = NULL;
             piece->hasMoved = 1;
             piece->pos = dest;
         }
         res = isPossible;
     }
+    
     CalculateColorMoves(board,!(piece->isWhite), filterMoves);
     return res;
 }
