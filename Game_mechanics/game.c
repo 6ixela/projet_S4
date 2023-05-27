@@ -174,6 +174,39 @@ int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
             board[pos] = NULL;
             piece->hasMoved = 1;
             piece->pos = dest;
+            if (!strcmp(piece->name, "pawn"))
+            {
+                if (piece->isWhite && piece->pos / 8 == 7)
+                {
+                    struct piece *queen =  malloc(sizeof(struct piece));
+                    queen->name = malloc(6);
+                    queen->possibleMoves = malloc(0);
+                    queen->isWhite = piece->isWhite;
+                    queen->nbMoves = 0;
+                    queen->pos = piece->pos;
+                    queen->hasMoved = 1;
+                    memcpy(queen->name, "queen", 6);
+                    freePiece(piece);
+                    board[dest] = queen;
+                }
+                else
+                {
+                    if (!piece->isWhite && piece->pos / 8 == 0)
+                    {
+                        struct piece *queen =  malloc(sizeof(struct piece));
+                        queen->name = malloc(6);
+                        queen->possibleMoves = malloc(0);
+                        queen->isWhite = piece->isWhite;
+                        queen->nbMoves = 0;
+                        queen->pos = piece->pos;
+                        queen->hasMoved = 1;
+                        memcpy(queen->name, "queen", 6);
+                        freePiece(piece);
+                        board[dest] = queen;
+                    }
+                }
+            }
+            
         }
         res = isPossible;
     }
