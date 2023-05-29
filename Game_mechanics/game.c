@@ -463,12 +463,12 @@ int __TestCheckmate(struct piece **board, int isWhite)
 
 int TestCheckmate(struct piece **board ,struct piece *piece, int dest)
 {
-    struct piece **copy = deepCopy(board);
-    __movePiece(copy, piece->pos, dest, 0);
-    
-    int res = __TestCheckmate(copy, piece->isWhite);
-    
-    freeBoard(copy);
+    struct move *m = newMove(board, piece->pos, dest);
+    board[m->start] = pieceCopy(piece);
+    movePieceNoFree(board, piece->pos, dest);
+    int res = __TestCheckmate(board, piece->isWhite);
+    undoMove(board, m);
+    free(m);
     return res;
 }
 

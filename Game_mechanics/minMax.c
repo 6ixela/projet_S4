@@ -80,31 +80,6 @@ struct piece *pieceCopy(struct piece *p)
     return res;
 }
 
-struct piece *tempMove(struct piece **board, int pos, int dest,
-    struct piece **eatenDup)
-{
-    struct piece *p = board[pos];
-    struct piece *dup = pieceCopy(p);
-    board[pos] = dup;
-    if(board[dest]) //eats so need to save the piece eaten
-    {
-        *eatenDup = pieceCopy(board[dest]);
-    }
-    movePiece(board, pos,dest);
-    return dup;
-}
-
-void undoMove(struct piece **board, struct piece *p, struct piece *dup,
-     struct piece *eatenDup)
-{
-    board[dup->pos] = NULL;
-    freePiece(dup);
-    if(eatenDup != NULL)
-    {
-        board[eatenDup->pos] = eatenDup;
-    }
-    board[p->pos] = p;
-}
 
 int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos)
@@ -175,15 +150,6 @@ int *startPos, int *destPos)
     return res;
 }
 
-
-struct move
-{
-    int start;
-    int dest;
-    struct piece *p;
-    struct piece *eaten;
-};
-
 struct move *newMove(struct piece **board, int start, int dest)
 {
     struct move *res = malloc(sizeof(struct move));
@@ -192,6 +158,13 @@ struct move *newMove(struct piece **board, int start, int dest)
     res->p = board[start];
     res->eaten = board[dest];
     return res;
+}
+
+void undoMove(struct piece **board, struct move *m)
+{
+    free(board[m->dest]);
+    board[m->dest] = m->eaten;
+    board[m->start] = m->p;
 }
 
 int minmaxOptiV2(struct piece **board, int depth, int isWhite, int returnMove, 
@@ -223,9 +196,9 @@ int *startPos, int *destPos)
                    board[m->start] = pieceCopy(p);
                    movePieceNoFree(board, p->pos, p->possibleMoves[k]);
                    int val = minmaxOptiV2(board, depth-1, !isWhite, 0,NULL,NULL);
-                   free(board[m->dest]);
-                   board[m->dest] = m->eaten;
-                   board[m->start] = p;
+
+                   //undo the move with the following
+                   undoMove(board, m);
                    free(m);
 
                     if(isWhite)

@@ -12,6 +12,15 @@ struct piece
     int *possibleMoves;
 };
 
+
+struct move
+{
+    int start;
+    int dest;
+    struct piece *p;
+    struct piece *eaten;
+};
+
 //initializes a new piece with the given name
 //returns null if wrong name
 struct piece *newPiece (char* name);
@@ -25,6 +34,8 @@ struct piece **newBoard();
 
 //Free the board
 void freeBoard(struct piece **board);
+
+struct move *newMove(struct piece **board, int start, int dest);
 
 //Places a piece at a given place
 //board: the board to place; name: the piece name; pos: the position to place
