@@ -27,6 +27,8 @@ struct piece *newPiece(char *name)
     {
         free(res);
         res = NULL;
+        printf("NewPiece: not a valid name\n");
+        fflush(stdout);
     }
     if(res)
     {
@@ -208,10 +210,95 @@ int __movePiece(struct piece **board, int pos, int dest, int filterMoves)
             }
             
         }
+        CalculateColorMoves(board,!(piece->isWhite), filterMoves);
         res = isPossible;
     }
-    
-    CalculateColorMoves(board,!(piece->isWhite), filterMoves);
+    return res;
+}
+
+int movePieceNoFree(struct piece **board, int pos, int dest)
+{
+    struct piece *piece = board[pos];
+    int res = 0;
+    if(piece != NULL)
+    {
+        int isPossible = 0;
+        int i =0;
+        while(i<piece->nbMoves && !isPossible)
+        {
+            isPossible = piece->possibleMoves[i] == dest;
+            i++;
+        }
+        if(isPossible)
+        {
+            if (!strcmp(piece->name, "king"))
+            {
+                if (piece->pos == dest-2 || piece->pos == dest+2)
+                {
+                    size_t k = 0;
+                    size_t k_dst = 0;
+                    if (dest < piece->pos)
+                    {
+                        k = piece->pos-4;
+                        k_dst = piece->pos-1;
+                    }
+                    else
+                    {
+                        k = piece->pos+3;
+                        k_dst = piece->pos+1;
+                    }
+                    board[k_dst] = board[k];
+                    board[k] = NULL;
+                    board[k_dst]->hasMoved = 1;
+                    board[k_dst]->pos = k_dst;
+                }
+                
+            }
+            board[dest] = board[pos];
+            board[pos] = NULL;
+            piece->hasMoved = 1;
+            piece->pos = dest;
+            if (!strcmp(piece->name, "pawn"))
+            {
+                if (piece->isWhite && piece->pos / 8 == 7)
+                {
+                    struct piece *queen =  malloc(sizeof(struct piece));
+                    queen->name = malloc(6);
+                    queen->possibleMoves = malloc(0);
+                    queen->isWhite = piece->isWhite;
+                    queen->nbMoves = 0;
+                    queen->pos = piece->pos;
+                    queen->hasMoved = 1;
+                    memcpy(queen->name, "queen", 6);
+                    freePiece(piece);
+                    board[dest] = queen;
+                }
+                else
+                {
+                    if (!piece->isWhite && piece->pos / 8 == 0)
+                    {
+                        struct piece *queen =  malloc(sizeof(struct piece));
+                        queen->name = malloc(6);
+                        queen->possibleMoves = malloc(0);
+                        queen->isWhite = piece->isWhite;
+                        queen->nbMoves = 0;
+                        queen->pos = piece->pos;
+                        queen->hasMoved = 1;
+                        memcpy(queen->name, "queen", 6);
+                        freePiece(piece);
+                        board[dest] = queen;
+                    }
+                }
+            }
+            
+        }
+        res = isPossible;
+        CalculateColorMoves(board,!(piece->isWhite), 0);
+    }
+    else{
+        printf("piece is null\n");
+        exit(EXIT_FAILURE);
+    }
     return res;
 }
 
@@ -274,7 +361,7 @@ void turn(struct piece **board, int isWhiteTurn)
 int CalculateColorMoves(struct piece** board, int isWhite, int filterMoves)
 {
     int res = 0;
-    for(size_t i = 0; i<63; i++)
+    for(size_t i = 0; i<64; i++)
     {
         struct piece *p = board[i];
         if(p != NULL && p->isWhite == isWhite)
@@ -313,6 +400,7 @@ void FilterMoves(struct piece **board, struct piece *p)
     int removed = 0;
     for (int i = 0; i<p->nbMoves; i++)
     {
+    fflush(stdout);
         if(TestCheckmate(board,p,p->possibleMoves[i]))
         {
             p->possibleMoves[i] = -1;
@@ -377,7 +465,9 @@ int TestCheckmate(struct piece **board ,struct piece *piece, int dest)
 {
     struct piece **copy = deepCopy(board);
     __movePiece(copy, piece->pos, dest, 0);
+    
     int res = __TestCheckmate(copy, piece->isWhite);
+    
     freeBoard(copy);
     return res;
 }

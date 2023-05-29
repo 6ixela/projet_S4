@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <ctype.h>
+#include <time.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
 #include "../Game_mechanics/movePiece.h"
@@ -187,6 +188,10 @@ int testAllMoves(struct piece **board, int depth, int isWhite)
 
 int main()
 {
+    clock_t start,end;
+    double exec_time;
+    start = clock();
+
     struct piece **b1 = newBoard();
     print_chessv2(b1);
     CalculateColorMoves(b1, 1, 1);
@@ -194,11 +199,15 @@ int main()
     CalculateColorMoves(b1, 0, 1);
     int s;
     int d;
-    minmax(b1, 3, 1, 1, &s,&d);
+    minmaxOptiV2(b1, 4, 1, 1, &s,&d);
     movePiece(b1,s,d);
 
     print_chessv2(b1);
 
     freeBoard(b1);
+
+    end = clock();
+    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
+    printf("Time taken = %f\n", exec_time);
     return 1;
 }

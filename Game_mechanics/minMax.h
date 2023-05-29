@@ -28,7 +28,6 @@ void undoMove(struct piece **board, struct piece *p, struct piece *dup,
 int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos);
 
-//Version opti qui marche pas
-int minmaxOpti(struct piece **board, int depth, int isWhite, int returnMove, 
+int minmaxOptiV2(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos);
 #endif

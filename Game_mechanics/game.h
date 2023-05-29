@@ -39,6 +39,8 @@ int movePiece(struct piece **board, int pos, int dest);
 //used to be able to not filter moves. else use movePiece
 int __movePiece(struct piece **board, int pos, int dest, int filterMoves);
 
+int movePieceNoFree(struct piece **board, int pos, int dest);
+
 //used to play the game in the console
 void turn(struct piece **board, int isWhiteTurn);
 

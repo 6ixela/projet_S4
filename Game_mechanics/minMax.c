@@ -175,11 +175,29 @@ int *startPos, int *destPos)
     return res;
 }
 
-int minmaxOpti(struct piece **board, int depth, int isWhite, int returnMove, 
+
+struct move
+{
+    int start;
+    int dest;
+    struct piece *p;
+    struct piece *eaten;
+};
+
+struct move *newMove(struct piece **board, int start, int dest)
+{
+    struct move *res = malloc(sizeof(struct move));
+    res->start = start;
+    res->dest = dest;
+    res->p = board[start];
+    res->eaten = board[dest];
+    return res;
+}
+
+int minmaxOptiV2(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos)
 {
-    print_chessv2(board);
-    fflush(stdout);
+
     int res;
     if (depth == 0)
     {
@@ -201,42 +219,15 @@ int *startPos, int *destPos)
                 
                 for (int k = 0; k < p->nbMoves; k++)
                 {
-                    
-                    struct piece *eatenDup = NULL;
-                    struct piece *dup = NULL;
-                    printf("effective pos = %d, pos in p = %d\n", i * 8 + j, p->pos);
-                    printf("test0, pos = %d, dest = %d\n", p->pos, p->possibleMoves[k]);
-                    fflush(stdout);
-                    dup = tempMove(board,p->pos,p->possibleMoves[k],&eatenDup);
-                    printf("test1\n");
-                    printf("BEFORE : p = %s at %d, dup = %s at %d\n", p->name, p->pos, dup->name,dup->pos);
-                    fflush(stdout);
-                    int val = minmaxOpti(board, depth-1, !isWhite, 0,NULL,NULL);
-                    if(val == -1)
-                    {
-                        printf("returned -1 at pos %d to %d\n", p->pos, p->possibleMoves[k]);
-                        fflush(stdout);
-                        return -1;
-                    }
-                    printf("test2\n");
-                    fflush(stdout);
-                    
-                    //print_chessv2(board);
-                    printf("AFTER: p = %s at %d, dup = %s at %d\n", p->name, p->pos, dup->name,dup->pos);
-                    fflush(stdout);
-                    undoMove(board, p, dup, eatenDup);
-                    printf("test3\n");
-                    
-                    //print_chessv2(board);
-                    fflush(stdout);
-                    
-                    //if(p->pos == 50 && p->possibleMoves[k] == 42 && board[18] !=NULL)
-                    //    print_chessv2(board);
-                    
-                    CalculateColorMoves(board, isWhite, 1);
-                    CalculateColorMoves(board, !isWhite, 1);
+                   struct move *m = newMove(board, p->pos, p->possibleMoves[k]);
+                   board[m->start] = pieceCopy(p);
+                   movePieceNoFree(board, p->pos, p->possibleMoves[k]);
+                   int val = minmaxOptiV2(board, depth-1, !isWhite, 0,NULL,NULL);
+                   free(board[m->dest]);
+                   board[m->dest] = m->eaten;
+                   board[m->start] = p;
+                   free(m);
 
-                    
                     if(isWhite)
                     {
                         if(val > best)
