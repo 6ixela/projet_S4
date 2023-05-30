@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <time.h>
+#include <unistd.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
 #include "../Game_mechanics/movePiece.h"
@@ -187,71 +188,178 @@ int testAllMoves(struct piece **board, int depth, int isWhite)
     return nbpos;
 }
 
+void OnePlayer(struct piece **board, int isWhiteTurn)
+{
+    while(1)
+    {
+        print_chess(board);
+        printf("Enter piece position then destinaton:\n");
+        char* piecePos = calloc(3, 1);
+        char* dest = calloc(3, 1);
+        fgets(piecePos, 3, stdin);
+        getchar();
+        //si pas de piece, redemander.
+        fgets(dest, 3, stdin);
+        getchar();
+        CalculateColorMoves(board, isWhiteTurn, 1);
+
+
+        if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
+            piecePos[1] < '1' || piecePos[1] > '8' )
+        {
+            printf("incorrect character. ");
+            continue;
+        }
+        int p1 = (piecePos[1] - '1')*8 + piecePos[0] - 'a';
+        int p2 = (dest[1] - '1')*8 + dest[0] - 'a';
+
+        printf("pos = %d to %d\n", p1,p2);
+
+        if(!board[p1] || !(board[p1]->isWhite == isWhiteTurn))
+        {
+            printf("No piece on this position. ");
+            continue;
+        }
+        if(movePiece(board, p1,p2))
+        {
+            break;
+        }
+        printf("Position not accessible. ");
+    }
+
+    int nextMoves = CalculateColorMoves(board, !isWhiteTurn, 1);
+    if(nextMoves == 0)
+    {
+        if(isWhiteTurn)
+            printf("White Won!\n");
+        else
+            printf("Black Won!\n");
+    }
+}
+
 int main()
 {
-    clock_t start,end;
-    double exec_time;
-    
-    int s;
-    int d;
-    struct piece **b1;
-    /*
-    start = clock();
+    int ok = 69;
+    char r[4];
+    size_t len = 0;
+    while(ok)
+    {
+        printf("You have different mode :\n");
+        printf("Enter play, test or show\n");
+        read(STDIN_FILENO, r, 4);
+        len = strlen(r);
+        if(strncmp(r, "test", len) == 0 || strncmp(r, "play", len) == 0
+        || strncmp(r, "show", len) == 0)
+            ok = 0;
+        else
+            printf("Invalid Argument\n");
+    }
+    if(strncmp(r, "test", len) == 0)
+    {
+        char diffi[1];
+        printf("Enter the difficulty of the test; easy, medium, hard (e, m, h)\n");
+        read(STDIN_FILENO, diffi, 1);
+        len = strlen(r);
+        if(strncmp(r, "e", len) == 0)
+        {
+            struct piece **board = LoadFromFen("8/Q5K1/3pp3/3pk3/4rq2/2P5/2BP3B/8");
+            while(1)
+            {
+                break;
+            }
+            print_chess(board);
 
-    b1 = newBoard();
-    print_chessv2(b1);
-    CalculateColorMoves(b1, 1, 1);
-    
-    CalculateColorMoves(b1, 0, 1);
-    minmax(b1, 4, 1, 1, &s,&d);
-    movePiece(b1,s,d);
+            freeBoard(board);
+        }
+        else if (strncmp(r, "m", len) == 0)
+        {
+            struct piece **board = LoadFromFen("");
+            print_chess(board);
+            freeBoard(board);
+        }
+        else
+        {
+            struct piece **board = LoadFromFen("r1b1k2r/pp1n1ppp/2pbp3/3pq3/N7/PP1B4/2PBN1PP/R2Q1RK1");
+            int start = -1;
+            int e = -1;
+            int color = 0;
+            int cpt = 6;
+            while(1)
+            {
+                print_chess(board);
+                CalculateColorMoves(board, 0, 0);                
+                printf("ok\n");
 
-    print_chessv2(b1);
+                CalculateColorMoves(board, 1, 1);
+                printf("ok\n");
 
-    freeBoard(b1);
+                minmaxOptiV3(board, 5, 3, color, &start, &e, INT_MIN, INT_MAX);
+                color = !color;
+                movePiece(board, start, e);
+                cpt--;
 
-    end = clock();
-    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("Time taken without anything = %f\n", exec_time);
-    
+            }
 
-    //-----------------//
-    start = clock();
+            freeBoard(board);
+        }
+        
+        
+    }
+    else if(strncmp(r, "play", len) == 0)
+    {
+        char nb_player[1];
+        printf("Enter the number of player\n");
+        fflush(STDIN_FILENO);
 
-    b1 = newBoard();
-    print_chessv2(b1);
-    CalculateColorMoves(b1, 1, 1);
-    
-    CalculateColorMoves(b1, 0, 1);
-    minmaxV2(b1, 6, 1, 1, &s,&d, INT_MIN, INT_MAX);
-    movePiece(b1,s,d);
-
-    print_chessv2(b1);
-
-    freeBoard(b1);
-
-    end = clock();
-    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("Time taken with beta = %f\n", exec_time);
-*/
-    
-    //-----------------//
-    start = clock();
-
-    b1 = newBoard();
-    print_chessv2(b1);
-    CalculateColorMoves(b1, 1, 1);
-    
-    CalculateColorMoves(b1, 0, 1);
-    minmaxOptiV3(b1, 6, 1, 1, &s,&d, INT_MIN, INT_MAX);
-    movePiece(b1,s,d);
-
-    print_chessv2(b1);
-
-    freeBoard(b1);
-
-    end = clock();
-    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("Time taken with beta and without deepcopy = %f\n", exec_time);
+        read(STDIN_FILENO, nb_player, 1);
+        len = strlen(r);
+        struct piece **board = newBoard();
+        CalculateColorMoves(board, 0, 0);
+        CalculateColorMoves(board, 1, 0);
+        if(strncmp(r, "1", len) == 0)//Player VS IA
+        {
+            while (1)
+            {
+                print_chess(board);
+                OnePlayer(board, 1);//faire une ft qui joue 1 joueur
+                int s = -1;
+                int e = -1;
+                minmaxOptiV3(board, 5, 0, 1, &s, &e, INT_MIN, INT_MAX);
+                movePiece(board, s, e);
+            }
+            
+            
+        }
+        else
+        {
+            while (1)
+            {
+                turn(board, 1);
+            }
+        }
+        
+        
+        freeBoard(board);
+    }
+    else // IA VS IA
+    {
+        //struct piece **board = newBoard();
+        struct piece **board = newBoard();
+        int start = -1;
+        int end = -1;
+        int color = 1;
+        while(1)
+        {
+            CalculateColorMoves(board, 0, 0);
+            CalculateColorMoves(board, 1, 0);
+            print_chess(board);
+            minmaxOptiV3(board, 5, color, 1, &start, &end, INT_MIN, INT_MAX);
+            printf("s = %i\nend = %i\n", start, end);
+            movePiece(board, start, end);
+            color = !color;
+        }
+        
+    }
+    //
     return 1;
 }
