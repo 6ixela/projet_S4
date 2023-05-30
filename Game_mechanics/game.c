@@ -309,30 +309,36 @@ void turn(struct piece **board, int isWhiteTurn)
     {
         print_chess(board);
         printf("Enter piece position then destinaton:\n");
+        fflush(stdout);
         char* piecePos = calloc(3, 1);
         char* dest = calloc(3, 1);
-        fgets(piecePos, 3, stdin);
+        piecePos = fgets(piecePos, 3, stdin);
         getchar();
         //si pas de piece, redemander.
-        fgets(dest, 3, stdin);
+        dest = fgets(dest, 3, stdin);
         getchar();
         CalculateColorMoves(board, isWhiteTurn, 1);
 
+        printf("pos = %s, dest = %s\n", piecePos, dest);
+        fflush(stdout);
 
         if(piecePos[0] < 'a' || piecePos[0] > 'h' || 
             piecePos[1] < '1' || piecePos[1] > '8' )
         {
             printf("incorrect character. ");
+            fflush(stdout);
             continue;
         }
         int p1 = (piecePos[1] - '1')*8 + piecePos[0] - 'a';
         int p2 = (dest[1] - '1')*8 + dest[0] - 'a';
 
         printf("pos = %d to %d\n", p1,p2);
+        fflush(stdout);
 
         if(!board[p1] || !(board[p1]->isWhite == isWhiteTurn))
         {
             printf("No piece on this position. ");
+            fflush(stdout);
             continue;
         }
         if(movePiece(board, p1,p2))
@@ -340,6 +346,7 @@ void turn(struct piece **board, int isWhiteTurn)
             break;
         }
         printf("Position not accessible. ");
+        fflush(stdout);
     }
 
     printf("line 183\n");
