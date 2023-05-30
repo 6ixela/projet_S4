@@ -239,6 +239,7 @@ void OnePlayer(struct piece **board, int isWhiteTurn)
 
 int main()
 {
+    /*
     int ok = 69;
     char r[4];
     size_t len = 0;
@@ -360,6 +361,20 @@ int main()
         }
         
     }
-    //
+    */
+    
+
+   struct piece **b = LoadFromFen("8/q5k1/3PP3/3PK3/4Rb2/2p5/2bp4/8");
+
+
+    print_chessv2(b);
+    int start;
+    int end;
+    minmaxOptiV3(b, 1, 1, 1, &start, &end, INT_MIN, INT_MAX);
+    movePiece(b,start,end);
+    print_chessv2(b);
+    free(b);
+
     return 1;
+
 }
