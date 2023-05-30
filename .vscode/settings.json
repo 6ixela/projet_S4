@@ -2,6 +2,7 @@
     "files.associations": {
         "movepiece.h": "c",
         "string.h": "c",
-        "testfunction.h": "c"
+        "testfunction.h": "c",
+        "limits": "c"
     }
 }

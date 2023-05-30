@@ -247,6 +247,7 @@ int movePieceNoFree(struct piece **board, int pos, int dest)
                         k = piece->pos+3;
                         k_dst = piece->pos+1;
                     }
+
                     board[k_dst] = board[k];
                     board[k] = NULL;
                     board[k_dst]->hasMoved = 1;

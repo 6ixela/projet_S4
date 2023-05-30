@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <ctype.h>
+#include <limits.h>
 #include <time.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
@@ -190,16 +191,19 @@ int main()
 {
     clock_t start,end;
     double exec_time;
+    
+    int s;
+    int d;
+    struct piece **b1;
+    /*
     start = clock();
 
-    struct piece **b1 = newBoard();
+    b1 = newBoard();
     print_chessv2(b1);
     CalculateColorMoves(b1, 1, 1);
     
     CalculateColorMoves(b1, 0, 1);
-    int s;
-    int d;
-    minmaxOptiV2(b1, 4, 1, 1, &s,&d);
+    minmax(b1, 4, 1, 1, &s,&d);
     movePiece(b1,s,d);
 
     print_chessv2(b1);
@@ -208,6 +212,46 @@ int main()
 
     end = clock();
     exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("Time taken = %f\n", exec_time);
+    printf("Time taken without anything = %f\n", exec_time);
+    
+
+    //-----------------//
+    start = clock();
+
+    b1 = newBoard();
+    print_chessv2(b1);
+    CalculateColorMoves(b1, 1, 1);
+    
+    CalculateColorMoves(b1, 0, 1);
+    minmaxV2(b1, 6, 1, 1, &s,&d, INT_MIN, INT_MAX);
+    movePiece(b1,s,d);
+
+    print_chessv2(b1);
+
+    freeBoard(b1);
+
+    end = clock();
+    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
+    printf("Time taken with beta = %f\n", exec_time);
+*/
+    
+    //-----------------//
+    start = clock();
+
+    b1 = newBoard();
+    print_chessv2(b1);
+    CalculateColorMoves(b1, 1, 1);
+    
+    CalculateColorMoves(b1, 0, 1);
+    minmaxOptiV3(b1, 6, 1, 1, &s,&d, INT_MIN, INT_MAX);
+    movePiece(b1,s,d);
+
+    print_chessv2(b1);
+
+    freeBoard(b1);
+
+    end = clock();
+    exec_time = ((double)(end - start))/CLOCKS_PER_SEC;
+    printf("Time taken with beta and without deepcopy = %f\n", exec_time);
     return 1;
 }

@@ -19,6 +19,9 @@ struct move
     int dest;
     struct piece *p;
     struct piece *eaten;
+    struct piece *rockRook;
+    int rookPos;
+    int rookdest;
 };
 
 //initializes a new piece with the given name

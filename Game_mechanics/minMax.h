@@ -21,6 +21,12 @@ void undoMove(struct piece **board, struct move *m);
 int minmax(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos);
 
+int minmaxV2(struct piece **board, int depth, int isWhite, int returnMove, 
+int *startPos, int *destPos, int alpha, int beta);
+
 int minmaxOptiV2(struct piece **board, int depth, int isWhite, int returnMove, 
 int *startPos, int *destPos);
+
+int minmaxOptiV3(struct piece **board, int depth, int isWhite, int returnMove, 
+int *startPos, int *destPos, int alpha, int beta);
 #endif
