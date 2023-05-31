@@ -5,11 +5,11 @@
 #include <stddef.h>
 #include <ctype.h>
 #include <time.h>
-#include "../Game_mechanics/game.h"
-#include "testFunction.h"
+#include "Game_mechanics/game.h"
+#include "test_function/testFunction.h"
 
-#include "../Game_mechanics/movePiece.h"
-#include "../Game_mechanics/minMax.h"
+#include "Game_mechanics/movePiece.h"
+#include "Game_mechanics/minMax.h"
 char *recupiece(struct piece *p, char* res);
 static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event, GtkLabel *labelBoard[][8]);
 int drawBoard(GtkLabel *labels[][8], struct piece **board);
