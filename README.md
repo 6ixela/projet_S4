@@ -16,4 +16,4 @@ pour lancer le code du projet, il faut :
       * Pour la dernière option, taper dans le terminal `./a.out show profondeur(int)`
 
 * pour utiliser l'interface utilisateur, tapez dans le terminal : `make gtk`
-  * puis taper de nouveau *__./a.out__*, la console utilisateur est ouverte
+  * puis taper de nouveau `./a.out`, la console utilisateur est ouverte
