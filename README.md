@@ -1,12 +1,14 @@
 # projet_S4
+Voici le projet du groupe Pablo.
 
-Le make commit fait un push direct avec tous les nouveaux fichiers
-    vous avez juste a faire make commit.
+----------------------------
+## Installation du programme.
 
-La fonction evalBoard evalue l'avancement de notre jeu d'echec.
-il utilise les piece->value pour cette evaluation.
-En gros plus le nombre de piece adverse ce fait manger plus le score est haut.
-Et inversement pour nous, plus on a perdu de piece, plus on a un score faible.
-Pour son fonctionnement, la fonction parcours tous le board et additionne ou soustrait les piece.value en fonction de leurs couleurs : on aime pas les pieces noirs :).
-
-Puis pour la ft deepCopy, je vais pas vous faire un tableau mais elle copy juste le board pour pas que les 2 variable soit les même. ce référer au tp de l'année derniere sur le jeu des dames.
+pour lancer le code sur le terminal, il faut :  
+* installer le github  
+* aller dans le dossier projet_S4 puis ecrire dans le terminal : *__make test__*  
+* un fichier a.out est créé  
+* vous aurez plusieurs options : tester l'IA, jouer ou faire I1 vs IA.
+    * Pour la premiere option, taper dans le terminal *__./a.out test profondeur(int) difficulté(easy, medium, hard)__*
+    * Pour la 2ème option, taper dans le terminal *__./a.out play nb_joueur(1 ou 2)__*
+    * Pour la dernière option, taper dans le terminal *__./a.out show profondeur(int)__*
