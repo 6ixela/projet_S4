@@ -1,11 +1,13 @@
 # projet_S4
-Voici le projet du groupe Pablo.
+Voici le projet chessGPT du groupe Pablo.  
+
+Ce projet à pour but de faire un bot d'échec sur lequel on peut jouer contre ou qui pourrait nous aider
 
 ----------------------------
 ## Installation du programme.
 
-pour lancer le code sur le terminal, il faut :  
-* installer le github  
+pour lancer le code du projet, il faut :  
+* telecharger le projet du github  
 * aller dans le dossier projet_S4 puis ecrire dans le terminal : `make test`
    * un fichier a.out est créé  
    * vous aurez plusieurs options : tester l'IA, jouer ou faire I1 vs IA.
