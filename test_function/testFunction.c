@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <ctype.h>
-#include <limits.h>
-#include <time.h>
 #include <unistd.h>
+#include <limits.h>
+#include <err.h>
+#include <time.h>
 #include "../Game_mechanics/game.h"
 #include "testFunction.h"
 #include "../Game_mechanics/movePiece.h"
 #include "../Game_mechanics/minMax.h"
-
 
 void print_chess(struct piece **tab)
 {
@@ -164,6 +164,18 @@ struct piece **LoadFromFen(char* fen)
     }
     return board;
 }
+int who_won(struct piece **board)
+{
+    int res = 0;
+    for(size_t i = 0; i<64; i++)
+    {
+        struct piece *p = board[i];
+        if(p)
+            if(!strcmp(p->name, "king"))
+                res += p->isWhite ? 1 : -1;
+    }
+    return res;
+}
 
 int testAllMoves(struct piece **board, int depth, int isWhite)
 {
@@ -237,89 +249,108 @@ void OnePlayer(struct piece **board, int isWhiteTurn)
     }
 }
 
-int main()
-{
-    /*
-    int ok = 69;
-    char r[4];
-    size_t len = 0;
-    while(ok)
-    {
-        printf("You have different mode :\n");
-        printf("Enter play, test or show\n");
-        read(STDIN_FILENO, r, 4);
-        len = strlen(r);
-        if(strncmp(r, "test", len) == 0 || strncmp(r, "play", len) == 0
-        || strncmp(r, "show", len) == 0)
-            ok = 0;
-        else
-            printf("Invalid Argument\n");
-    }
-    if(strncmp(r, "test", len) == 0)
-    {
-        char diffi[1];
-        printf("Enter the difficulty of the test; easy, medium, hard (e, m, h)\n");
-        read(STDIN_FILENO, diffi, 1);
-        len = strlen(r);
-        if(strncmp(r, "e", len) == 0)
-        {
-            struct piece **board = LoadFromFen("8/Q5K1/3pp3/3pk3/4rq2/2P5/2BP3B/8");
-            while(1)
-            {
-                break;
-            }
-            print_chess(board);
 
-            freeBoard(board);
-        }
-        else if (strncmp(r, "m", len) == 0)
+void allMove(struct piece **board)
+{
+    for (size_t i = 0; i < 64; i++)
+    {
+        struct piece *p = board[i];
+        if(p)
+            p->hasMoved = 1;
+    }
+    
+}
+
+/*int main(int argc, char* argv[])
+{
+    if(strncmp(argv[1], "test", 4) == 0)
+    {
+        if (argc != 4)
+            errx(3, "Invalid Argument");
+
+        int prof = *argv[2] - '0';
+        printf("argv[2] = %d\n", prof);
+        if(strncmp(argv[3], "easy", 4) == 0)
         {
-            struct piece **board = LoadFromFen("");
-            print_chess(board);
-            freeBoard(board);
-        }
-        else
-        {
-            struct piece **board = LoadFromFen("r1b1k2r/pp1n1ppp/2pbp3/3pq3/N7/PP1B4/2PBN1PP/R2Q1RK1");
-            int start = -1;
+            struct piece **board5 = LoadFromFen("7k/1q4pp/5p2/2p5/N7/1P1r4/P7/KR4B1");
+            allMove(board5);
+            int cpt = 0;
+            int s = -1;
             int e = -1;
             int color = 0;
-            int cpt = 6;
-            while(1)
+            while (cpt < 5)
+            {
+                print_chess(board5);
+                CalculateColorMoves(board5, 1, 0);
+                CalculateColorMoves(board5, 0, 0);
+                
+                minmaxOptiV3(board5, prof, color, 1, &s, &e, INT_MIN, INT_MAX);
+                movePiece(board5, s, e);
+                color = !color;
+                cpt++;
+            }
+            
+            freeBoard(board5);
+        }
+        else if (strncmp(argv[3], "medium", 6) == 0)
+        {
+            struct piece **board = LoadFromFen("K1B5/8/1Q6/8/8/n6r/1R4n1/4r2k");
+            allMove(board);
+            int cpt = 0;
+            int s = -1;
+            int e = -1;
+            int color = 1;
+            while (cpt < 10)
             {
                 print_chess(board);
-                CalculateColorMoves(board, 0, 0);                
-                printf("ok\n");
+                
+                CalculateColorMoves(board, 1, 0);
+                CalculateColorMoves(board, 0, 0);
 
-                CalculateColorMoves(board, 1, 1);
-                printf("ok\n");
-
-                minmaxOptiV3(board, 5, 3, color, &start, &e, INT_MIN, INT_MAX);
+                minmaxOptiV3(board, prof, color, 1, &s, &e, INT_MIN, INT_MAX);
+                movePiece(board, s, e);
                 color = !color;
-                movePiece(board, start, e);
-                cpt--;
+                cpt++;
+            }
+            freeBoard(board);
+        }
+        else
+        {
+            struct piece **board5 = LoadFromFen("kb6/b1r1n3/7p/8/8/4N3/1BR5/KR6");
+            allMove(board5);
+            int cpt = 0;
+            int s = -1;
+            int e = -1;
+            int color = 0;
+            while (cpt < 5)
+            {
+                print_chess(board5);
+                CalculateColorMoves(board5, 1, 0);
+                CalculateColorMoves(board5, 0, 0);
+                minmaxOptiV3(board5, prof, color, 1, &s, &e, INT_MIN, INT_MAX);
+
+                movePiece(board5, s, e);
+                color = !color;
+                cpt++;
 
             }
-
-            freeBoard(board);
+            
+            freeBoard(board5);
         }
         
         
     }
-    else if(strncmp(r, "play", len) == 0)
+    else if(strncmp(argv[1], "play", 4) == 0)
     {
-        char nb_player[1];
-        printf("Enter the number of player\n");
-        fflush(STDIN_FILENO);
-
-        read(STDIN_FILENO, nb_player, 1);
-        len = strlen(r);
+        if (argc != 3)
+            errx(3, "Invalid Argument");
+        int nb_player = *argv[2]-'0';
         struct piece **board = newBoard();
         CalculateColorMoves(board, 0, 0);
         CalculateColorMoves(board, 1, 0);
-        if(strncmp(r, "1", len) == 0)//Player VS IA
+        if(nb_player == 1)//Player VS IA
         {
-            while (1)
+            while (!who_won(board))
             {
                 print_chess(board);
                 OnePlayer(board, 1);//faire une ft qui joue 1 joueur
@@ -333,7 +364,7 @@ int main()
         }
         else
         {
-            while (1)
+            while (!who_won(board))
             {
                 turn(board, 1);
             }
@@ -344,37 +375,24 @@ int main()
     }
     else // IA VS IA
     {
-        //struct piece **board = newBoard();
+        if(argc != 3)
+            errx(3, "Invalid Argument");
+        int prof = *argv[2]-'0';
         struct piece **board = newBoard();
         int start = -1;
         int end = -1;
         int color = 1;
-        while(1)
+        while(!who_won(board))
         {
             CalculateColorMoves(board, 0, 0);
             CalculateColorMoves(board, 1, 0);
             print_chess(board);
-            minmaxOptiV3(board, 5, color, 1, &start, &end, INT_MIN, INT_MAX);
+            minmaxOptiV3(board, prof, color, 1, &start, &end, INT_MIN, INT_MAX);
             printf("s = %i\nend = %i\n", start, end);
             movePiece(board, start, end);
             color = !color;
         }
         
     }
-    */
-    
-
-   struct piece **b = LoadFromFen("8/q5k1/3PP3/3PK3/4Rb2/2p5/2bp4/8");
-
-
-    print_chessv2(b);
-    int start;
-    int end;
-    minmaxOptiV3(b, 1, 1, 1, &start, &end, INT_MIN, INT_MAX);
-    movePiece(b,start,end);
-    print_chessv2(b);
-    free(b);
-
-    return 1;
-
-}
+    return 0;
+}*/
