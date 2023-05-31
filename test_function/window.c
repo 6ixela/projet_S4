@@ -10,9 +10,9 @@
 
 #include "../Game_mechanics/movePiece.h"
 #include "../Game_mechanics/minMax.h"
-
-
-
+char *recupiece(struct piece *p, char* res);
+static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event, GtkLabel *labelBoard[][8]);
+int drawBoard(GtkLabel *labels[][8], struct piece **board);
 GdkColor prevColor;
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
 int clicks = 0;
