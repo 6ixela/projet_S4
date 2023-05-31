@@ -1,10 +1,10 @@
 # projet_S4
-Voici le projet chessGPT du groupe Pablo.  
+This is our group's project repository
 
-Ce projet à pour but de faire un bot d'échec sur lequel on peut jouer contre ou qui pourrait nous aider
+This project center around making a chess bot that can be played against by a player or even another AI.
 
 ----------------------------
-## Installation du programme.
+## Installation
 
 1. Download the zip of the latest version
 2. Unzip the package
@@ -21,7 +21,7 @@ Ce projet à pour but de faire un bot d'échec sur lequel on peut jouer contre o
 
 ## Contributors
 
-*   [Lucas Juanico]
-*   [Alexis Vasseur]
-*   [Enzo Fernandez]
-*   [Victor Biancini]
+*   Lucas Juanico
+*   Alexis Vasseur
+*   Enzo Fernandez
+*   Victor Biancini
