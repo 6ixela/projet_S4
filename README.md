@@ -6,14 +6,22 @@ Ce projet à pour but de faire un bot d'échec sur lequel on peut jouer contre o
 ----------------------------
 ## Installation du programme.
 
-pour lancer le code du projet, il faut :  
-* telecharger le projet du github  
-* aller dans le dossier projet_S4 puis ecrire dans le terminal : `make test`
-   * un fichier a.out est créé  
-   * vous aurez plusieurs options : tester l'IA, jouer ou faire I1 vs IA.
-      * Pour la premiere option, taper dans le terminal `./a.out test profondeur(int) difficulté(easy, medium, hard)`
-      * Pour la 2ème option, taper dans le terminal `./a.out play nb_joueur(1 ou 2)`
-      * Pour la dernière option, taper dans le terminal `./a.out show profondeur(int)`
+1. Download the zip of the latest version
+2. Unzip the package
+3. Open a terminal in the folder
+4. Write `make test`
 
-* pour utiliser l'interface utilisateur, tapez dans le terminal : `make gtk`
-  * puis taper de nouveau `./a.out`, la console utilisateur est ouverte
+## Usage
+
+1. Test the IA : write in the terminal `./a.out test profondeur(int) difficulté(easy, medium, hard)`
+2. Player against player : write in the terminal `./a.out play nb_joueur(1 ou 2)`
+3. AI against AI : write in the terminal `./a.out show profondeur(int)`
+
+* For user interface, write in the terminal `make gtk` then `./a.out`
+
+## Contributors
+
+*   [Lucas Juanico]
+*   [Alexis Vasseur]
+*   [Enzo Fernandez]
+*   [Victor Biancini]
