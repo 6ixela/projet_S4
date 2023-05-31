@@ -12,3 +12,6 @@ pour lancer le code sur le terminal, il faut :
       * Pour la premiere option, taper dans le terminal *__./a.out test profondeur(int) difficulté(easy, medium, hard)__*
       * Pour la 2ème option, taper dans le terminal *__./a.out play nb_joueur(1 ou 2)__*
       * Pour la dernière option, taper dans le terminal *__./a.out show profondeur(int)__*
+
+* pour utiliser l'interface utilisateur, tapez dans le terminal : *__make gtk__*
+  * puis taper de nouveau *__./a.out__*, la console utilisateur est ouverte
