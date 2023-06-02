@@ -9,7 +9,7 @@ testMemory:
 	gcc -Wextra -Wall -fsanitize=address -g $(FILE)
 
 test:
-	gcc -Wextra -Wall -g test_function/main.c t $(FILE)
+	gcc -Wextra -Wall -g test_function/main.c $(FILE)
 
 gtk:
 	gcc -Wextra -Wall -g $(PACKAGE) window.c $(FILE) $(LIBS)
