@@ -13,9 +13,9 @@ This project center around making a chess bot that can be played against by a pl
 
 ## Usage
 
-1. Test the IA : write in the terminal `./a.out test profondeur(int) difficulté(easy, medium, hard)`
-2. Player against player : write in the terminal `./a.out play nb_joueur(1 ou 2)`
-3. AI against AI : write in the terminal `./a.out show profondeur(int)`
+1. Test the IA : write in the terminal `./a.out test depth(int) difficulty(easy, medium, hard)`
+2. Player against player : write in the terminal `./a.out play nb_player(1 ou 2)`
+3. AI against AI : write in the terminal `./a.out show depth(int)`
 
 * For user interface, write in the terminal `make gtk` then `./a.out`
 
